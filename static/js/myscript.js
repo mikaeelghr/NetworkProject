@@ -1,4 +1,3 @@
-/***************************** Authentication Actions  ******************************/
 $("#loginbtn").on("click", function(){
     var user = $("#username").val();
     var password = $("#password").val();
@@ -12,6 +11,7 @@ $("#loginbtn").on("click", function(){
       var response = JSON.parse(response);
 
       if (response.success) {
+        window.localStorage.setItem('ACCESS_TOKEN', response.token);
         window.location.href = nextURL;
       }
       else {
@@ -27,7 +27,19 @@ $("#logoutbtn").on("click", function(){
 });
 
 $("#likeBtn").on("click", function(){
-    // felan
+    var token = window.localStorage.getItem('ACCESS_TOKEN');
+    $.ajax({
+        url: "/video/felan/like",
+        headers: {"Authorization": "Token "+token},
+        data: {
+            // body
+        },
+        type: "POST",
+        success: function() {
+            // felan
+        }
+    });
+
 });
 
 $("#unlikeBtn").on("click", function(){
