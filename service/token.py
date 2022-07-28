@@ -17,18 +17,19 @@ def authenticate_with_token(f, allowed_roles, *args, **kwargs):
                }, 401
     try:
         data = jwt.decode(token, current_app.config["SECRET_KEY"], algorithms=["HS256"])
-        current_user = models.User.objects.get(username=data["username"])
-        if current_user is None:
-            return {
-                       "message": "Invalid Authentication token!",
-                       "data": None,
-                       "error": "Unauthorized"
-                   }, 401
-        if current_user.role not in allowed_roles:
+        if data['role'] not in allowed_roles:
             abort(404)
-        if current_user.blocked:
-            abort(403)
-        request.user = current_user
+        if data['role'] != "ADMIN":
+            current_user = models.User.objects.get(username=data["username"])
+            if current_user is None:
+                return {
+                           "message": "Invalid Authentication token!",
+                           "data": None,
+                           "error": "Unauthorized"
+                       }, 401
+            if current_user.blocked:
+                abort(403)
+            request.user = current_user
         return f(*args, **kwargs)
     except Exception as e:
         return {
@@ -60,3 +61,13 @@ def must_be_admin(f):
         return authenticate_with_token(f, ["ADMIN"], *args, **kwargs)
 
     return decorated
+
+
+class TokenService:
+    @staticmethod
+    def generateToken(user):
+        return jwt.encode(
+            payload={
+                "username": user.username,
+                "role": user.role,
+            }, key=current_app.config["SECRET_KEY"])

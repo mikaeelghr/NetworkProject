@@ -3,7 +3,7 @@ from flask import render_template
 from flask import redirect, url_for
 import json
 
-from service.token import must_be_user, must_be_admin
+from service.token import must_be_user, must_be_admin, TokenService
 from service.user import UserService
 from service.video import VideoService
 
@@ -19,20 +19,19 @@ def add_routes(app: Flask):
         username = request.form['username']
         password = request.form['password']
 
-        UserService.login(username, password)
-
-        return json.dumps({'success': True})
+        user = UserService.login(username, password)
+        access_token = TokenService.generateToken(user)
+        return json.dumps({'success': True, 'token': access_token})
 
     @app.route('/user/register', methods=['POST'])
     @must_be_admin
     def register():
-        print(request.user)
         username = request.form['username']
         password = request.form['password']
 
-        UserService.register(username, password)
-
-        return json.dumps({'success': True})
+        user = UserService.register(username, password)
+        access_token = TokenService.generateToken(user)
+        return json.dumps({'success': True, 'token': access_token})
 
     # code random, bayad avaz she
     @app.route('/videos/upload', methods=['GET', 'POST'])
