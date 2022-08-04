@@ -35,13 +35,20 @@
             <li class="nav-item">
                 {% if user %}
                 <a class="nav-link active" href="/login">
-                    خروج
+                    ورود
                 </a>
                 {% else %}
                 <a class="nav-link active" href="/logout">
                     خروج
                 </a>
                 {% endif %}
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link active" href="/tickets/new">
+                    تیکت جدید
+                </a>
             </li>
         </ul>
         <ul class="navbar-nav mr-auto">
@@ -69,6 +76,5 @@
     </footer>
 </div>
 <script src="{{ url_for('static', filename='js/apis.js') }}"></script>
-<script src="{{ url_for('static', filename='js/new_ticket.js') }}"></script>
 </body>
 </html>

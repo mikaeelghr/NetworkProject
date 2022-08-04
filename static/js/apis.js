@@ -17,7 +17,7 @@ $("#loginbtn").on("click", function(){
     var password = $("#password").val();
 
     $.post("/api/user/login", {username: user, password: password}, function (response) {
-        handleResponse("/tickets/new", response, function ({token}) { window.localStorage.setItem('ACCESS_TOKEN', token) }, "نام کاربری یا رمز عبور اشتباه است");
+        handleResponse("/videos/list", response, function ({token}) { window.localStorage.setItem('ACCESS_TOKEN', token) }, "نام کاربری یا رمز عبور اشتباه است");
     });
 });
 
@@ -28,7 +28,7 @@ $("#registerbtn").on("click", function(){
     var lastname = $("#lastname").val();
 
     $.post("/api/user/register", {username: user, password: password, firstname, lastname}, function (response) {
-        handleResponse("/tickets/new", response, function ({token}) { window.localStorage.setItem('ACCESS_TOKEN', token) });
+        handleResponse("/videos/list", response, function ({token}) { window.localStorage.setItem('ACCESS_TOKEN', token) });
     });
 });
 
@@ -63,4 +63,16 @@ $("#loginRedirectBtn").on("click", function(){
 
 $("#registerRedirectBtn").on("click", function(){
     window.location.href = "/register";
+});
+
+$("#send_button").on("click", function(){
+    var message = $("#ticket_message").val();
+
+    $.post("/api/tickets/new", {ticket_message: message}, function (response) {
+        handleResponse("/videos/list", response, function(r){}, "نام کاربری یا رمز عبور اشتباه است");
+    });
+});
+
+$("#cancel_button").on("click", function(){
+    window.location.href = prev_url;
 });
