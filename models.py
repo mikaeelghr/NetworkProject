@@ -21,7 +21,7 @@ class Comment(EmbeddedMongoModel):
     content = fields.CharField()
 
 
-class StreamVideo(MongoModel):
+class Videos(MongoModel):
     title = fields.CharField()
     owner = fields.ReferenceField(User, on_delete=ReferenceField.CASCADE)
     revised_on = fields.DateTimeField()

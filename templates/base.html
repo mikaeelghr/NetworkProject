@@ -5,9 +5,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <meta name="description" content="">
-    <meta name="author" content="">
-
     <title>Network Project</title>
 
     <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet" type="text/css">
@@ -36,15 +33,21 @@
     <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
+                {% if user %}
                 <a class="nav-link active" href="/login">
-                    ورود
+                    خروج
                 </a>
+                {% else %}
+                <a class="nav-link active" href="/logout">
+                    خروج
+                </a>
+                {% endif %}
             </li>
         </ul>
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
                 {% if user %}
-                <a class="nav-link active" href="/users/me/">
+                <a class="nav-link active" href="/videos/list">
                     {{ user.first_name }} {{ user.last_name }}
                 </a>
                 {% endif %}
