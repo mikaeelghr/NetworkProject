@@ -5,7 +5,7 @@ $("#loginbtn").on("click", function(){
 
     $("#loader").html('<img src="/static/images/loader.gif">');
 
-    $.post("/user/login", {username: user, password: password}, function (response) {
+    $.post("/api/user/login", {username: user, password: password}, function (response) {
 
       $("#loader").html('');
       var response = JSON.parse(response);
@@ -21,8 +21,7 @@ $("#loginbtn").on("click", function(){
 });
 
 $("#logoutbtn").on("click", function(){
-    $.post("/user/logout", {action: 'logout'}, function (response) {
-        window.location.href = "index.php";
+    $.post("/api/user/logout", {action: 'logout'}, function (response) {
     });
 });
 

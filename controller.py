@@ -3,20 +3,21 @@ from flask import render_template
 from flask import redirect, url_for
 import json
 
-from service.token import must_be_user, must_be_admin, TokenService
+from pymongo.errors import DuplicateKeyError
+
+from service.token import must_be_user, TokenService
 from service.user import UserService
 from service.video import VideoService
 from service.ticket import TicketService
 
 
 def add_routes(app: Flask):
-    # @app.route('/')
+    @app.route('/')
     @app.route('/index')
     def index():
         return render_template("index.html")
 
-
-    @app.route('/user/login', methods=['POST'])
+    @app.route('/api/user/login', methods=['POST'])
     def login():
         username = request.form['username']
         password = request.form['password']
@@ -25,13 +26,16 @@ def add_routes(app: Flask):
         access_token = TokenService.generateToken(user)
         return json.dumps({'success': True, 'token': access_token})
 
-    @app.route('/user/register', methods=['POST'])
+    @app.route('/api/user/register', methods=['POST'])
     # @must_be_admin
     def register():
         username = request.form['username']
         password = request.form['password']
 
-        user = UserService.register(username, password)
+        try:
+            user = UserService.register(username, password)
+        except DuplicateKeyError:
+            return json.dumps({'success': False})
         access_token = TokenService.generateToken(user)
         return json.dumps({'success': True, 'token': access_token})
 
@@ -51,15 +55,14 @@ def add_routes(app: Flask):
     def get_stream_of_user(username):
         pass
 
-    @app.route('/')
+    @app.route('/tickets/new')
     def tickets():
         return render_template("new_ticket.html")
 
-    @app.route('/tickets/new_ticket', methods=['POST'])
+    @app.route('/api/tickets/new', methods=['POST'])
     @must_be_user
     def new_ticket():
-        user_id = request.user.id
-        print("HI")
+        user_id = request.user._id
         ticket_message = request.form['ticket_message']
         TicketService.create_ticket(user_id=user_id, message=ticket_message)
         return json.dumps({'success': True})

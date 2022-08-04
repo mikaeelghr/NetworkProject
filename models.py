@@ -1,14 +1,17 @@
 from pymodm import MongoModel, fields, EmbeddedMongoModel, ReferenceField
+import pymongo
 
 
 class User(MongoModel):
-    id = fields.CharField(primary_key=True)
     username = fields.CharField()
     role = fields.CharField(choices=('USER', 'STAFF', "ADMIN"))
     first_name = fields.CharField(max_length=30)
     last_name = fields.CharField(max_length=30)
     blocked = fields.BooleanField(default=False)
     password = fields.CharField()
+
+    class Meta:
+        indexes = [pymongo.IndexModel([('username', pymongo.ASCENDING)], unique=True)]
 
 
 # feel free to change these models
@@ -31,3 +34,4 @@ class Ticket(MongoModel):
     user = fields.ReferenceField(User, on_delete=ReferenceField.CASCADE)
     messages = fields.ListField()
     state = fields.CharField(choices=('NEW', 'WAITING', 'SOLVED', 'CLOSED'))
+    assignee_user_id = fields.ReferenceField(User, on_delete=ReferenceField.CASCADE)

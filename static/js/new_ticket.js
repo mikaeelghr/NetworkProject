@@ -5,7 +5,7 @@ $("#send_button").on("click", function(){
 
     var token = window.localStorage.getItem('ACCESS_TOKEN');
     $.ajax({
-        url: "/tickets/new_ticket",
+        url: "/api/tickets/new",
         headers: {"Authorization": "Token "+token},
         data: {ticket_message: message},
         type: "POST",
