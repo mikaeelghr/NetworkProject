@@ -6,11 +6,15 @@
 <div class="box">
     <ul class="directory-list">
         <li class="folder">همه فیلم ها
+            <div style="margin-bottom: 20px"></div>
             <ul>
                 {% for c in videos %}
-                <li class="folder">
-                    <a style="font-weight:normal" href="{{c.name}}">{{c.title}}</a>
-                </li>
+                <a style="padding:10px;font-weight:normal" href="/videos/s/{{c._id}}">
+                    <img src="{{ url_for('static', filename='uploaded_videos') }}/{{c.owner._id}}/{{ c.thumbnail_name }}"
+                         width="200" height="200"></img>
+                    {{c.title}}
+                </a>
+                <br></br>
                 {% endfor %}
             </ul>
         </li>

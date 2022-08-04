@@ -26,6 +26,7 @@ class Videos(MongoModel):
     owner = fields.ReferenceField(User, on_delete=ReferenceField.CASCADE)
     revised_on = fields.DateTimeField()
     filename = fields.CharField()
+    thumbnail_name = fields.CharField()
     description = fields.CharField()
     comments = fields.EmbeddedDocumentListField(Comment)
 

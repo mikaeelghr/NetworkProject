@@ -65,7 +65,6 @@ def add_routes(app: Flask):
         response.set_cookie("TOKEN", access_token, httponly=True)
         return response
 
-    # code random, bayad avaz she
     @app.route('/videos/upload/', methods=['GET', 'POST'])
     @must_be_user
     def upload_video():
@@ -82,9 +81,13 @@ def add_routes(app: Flask):
         else:
             return render_template("add_video.html", form_all_tags=['سرگرمی', 'آموزشی'])
 
-    @app.route('/videos/user/<username>', methods=['GET'])
-    def get_stream_of_user(username):
-        pass
+    @app.route('/videos/s/<video_id>', methods=['GET'])
+    @must_be_user
+    def get_stream_of_user(video_id):
+        video = VideoService.get(video_id)
+        if video is None:
+            return json.dumps({"error": "file not found"})
+        return render_template("show_video.html", video=video)
 
     @app.route('/tickets/new')
     def tickets():

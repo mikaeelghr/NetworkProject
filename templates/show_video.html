@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<h1>{{ video.title }}</h1>
+<video src="{{ url_for('static', filename='uploaded_videos') }}/{{video.owner._id}}/{{ video.filename }}"></video>
+{% endblock %}
