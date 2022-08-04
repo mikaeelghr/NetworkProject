@@ -56,11 +56,10 @@ def add_routes(app: Flask):
         return render_template("new_ticket.html")
 
     @app.route('/tickets/new_ticket', methods=['POST'])
+    @must_be_user
     def new_ticket():
-        #todo how to get username?
-        username = "ALI"
+        username = request.user.username
         print("HI")
         ticket_message = request.form['ticket_message']
         TicketService.create_ticket(username=username, message=ticket_message)
-        #todo should we return access_token?
         return json.dumps({'success': True})
