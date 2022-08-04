@@ -2,8 +2,6 @@ $("#loginbtn").on("click", function(){
     var user = $("#username").val();
     var password = $("#password").val();
 
-    $("#loader").html('<img src="/static/images/loader.gif">');
-
     $.post("/api/user/login", {username: user, password: password}, function (response) {
 
       $("#loader").html('');
@@ -14,7 +12,7 @@ $("#loginbtn").on("click", function(){
         window.location.href = "/tickets/new";
       }
       else {
-         $("#loader").html('<p class="alert alert-danger">نام کاربری یا رمز عبور اشتباه است</p>');
+         $("#error_desc").html('<p class="alert alert-danger">نام کاربری یا رمز عبور اشتباه است</p>');
       }
     });
 });
@@ -25,8 +23,6 @@ $("#registerbtn").on("click", function(){
     var firstname = $("#firstname").val();
     var lastname = $("#lastname").val();
 
-    $("#loader").html('<img src="/static/images/loader.gif">');
-
     $.post("/api/user/register", {username: user, password: password, firstname, lastname}, function (response) {
 
       $("#loader").html('');
@@ -35,10 +31,10 @@ $("#registerbtn").on("click", function(){
       if (response.success) {
         window.localStorage.setItem('ACCESS_TOKEN', response.token);
         window.location.href = "/tickets/new";
-        $("#loader").html('<p class="success">ثبت نام انجام شد</p>');
+        $("#error_desc").html('<p class="success">ثبت نام انجام شد</p>');
       }
       else {
-         $("#loader").html('<p class="alert alert-danger">مشکلی پیش آمده است</p>');
+         $("#error_desc").html('<p class="alert alert-danger">مشکلی پیش آمده است</p>');
       }
     });
 });
