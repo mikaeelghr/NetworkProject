@@ -6,13 +6,15 @@ import json
 from service.token import must_be_user, must_be_admin, TokenService
 from service.user import UserService
 from service.video import VideoService
+from service.ticket import TicketService
 
 
 def add_routes(app: Flask):
-    @app.route('/')
+    # @app.route('/')
     @app.route('/index')
     def index():
         return render_template("index.html")
+
 
     @app.route('/user/login', methods=['POST'])
     def login():
@@ -24,7 +26,7 @@ def add_routes(app: Flask):
         return json.dumps({'success': True, 'token': access_token})
 
     @app.route('/user/register', methods=['POST'])
-    @must_be_admin
+    # @must_be_admin
     def register():
         username = request.form['username']
         password = request.form['password']
@@ -48,3 +50,17 @@ def add_routes(app: Flask):
     @app.route('/videos/user/<username>', methods=['GET'])
     def get_stream_of_user(username):
         pass
+
+    @app.route('/')
+    def tickets():
+        return render_template("new_ticket.html")
+
+    @app.route('/tickets/new_ticket', methods=['POST'])
+    def new_ticket():
+        #todo how to get username?
+        username = "ALI"
+        print("HI")
+        ticket_message = request.form['ticket_message']
+        TicketService.create_ticket(username=username, message=ticket_message)
+        #todo should we return access_token?
+        return json.dumps({'success': True})

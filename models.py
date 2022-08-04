@@ -2,7 +2,7 @@ from pymodm import MongoModel, fields, EmbeddedMongoModel, ReferenceField
 
 
 class User(MongoModel):
-    username = fields.CharField(primary_key=True)
+    username = fields.CharField()
     role = fields.CharField(choices=('USER', 'STAFF', "ADMIN"))
     first_name = fields.CharField(max_length=30)
     last_name = fields.CharField(max_length=30)
@@ -24,3 +24,9 @@ class StreamVideo(MongoModel):
     resourceId = fields.CharField()
     description = fields.CharField()
     comments = fields.EmbeddedDocumentListField(Comment)
+
+
+class Ticket(MongoModel):
+    username = fields.ReferenceField(User, on_delete=ReferenceField.CASCADE)
+    messages = fields.ListField()
+    state = fields.CharField(choices=('NEW', 'WAITING', 'SOLVED', 'CLOSED'))
