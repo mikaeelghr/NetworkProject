@@ -66,19 +66,21 @@ def add_routes(app: Flask):
         return response
 
     # code random, bayad avaz she
-    @app.route('/videos/upload', methods=['GET', 'POST'])
+    @app.route('/videos/upload/', methods=['GET', 'POST'])
     @must_be_user
     def upload_video():
         if request.method == 'POST':
-            username = request.user.username
+            user_id = request.user._id
             if 'file' not in request.files or request.files['file'] == '':
                 return redirect(request.url)
             file = request.files['file']
-            VideoService.add(username, file)
-            return render_template("add_video.html", tags=['سرگرمی', 'آموزشی'], success=True,
+            name = request.form['name']
+            title = request.form['title']
+            VideoService.add(str(user_id), name, title, file)
+            return render_template("add_video.html", form_all_tags=['سرگرمی', 'آموزشی'], success=True,
                                    success_desc="ویدیو با موفیت آپلود شد")
         else:
-            return render_template("add_video.html", tags=['سرگرمی', 'آموزشی'])
+            return render_template("add_video.html", form_all_tags=['سرگرمی', 'آموزشی'])
 
     @app.route('/videos/user/<username>', methods=['GET'])
     def get_stream_of_user(username):
