@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <form class="form-signin">
+        <h2 class="form-signin-heading">وارد شوید</h2>
+        <label for="username" class="sr-only">Username</label>
+        <input type="text" id="username" class="form-control" placeholder="نام کاربری" required autofocus>
+        <label for="password" class="sr-only">Password</label>
+        <input type="password" id="password" class="form-control" placeholder="رمز عبور" required>
+
+        <div class="checkbox"></div>
+        <button class="btn btn-lg btn-primary btn-block" id="loginbtn" type="button">ورود</button>
+        <button class="btn btn-sm btn-block" id="registerRedirectBtn" type="button">ثبت نام</button>
+
+        <div id="loader text-center"></div>
+    </form>
+{% endblock %}

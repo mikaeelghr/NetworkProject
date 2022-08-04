@@ -5,8 +5,8 @@ import pymongo
 class User(MongoModel):
     username = fields.CharField()
     role = fields.CharField(choices=('USER', 'STAFF', "ADMIN"))
-    first_name = fields.CharField(max_length=30)
-    last_name = fields.CharField(max_length=30)
+    firstname = fields.CharField(max_length=30)
+    lastname = fields.CharField(max_length=30)
     blocked = fields.BooleanField(default=False)
     password = fields.CharField()
 

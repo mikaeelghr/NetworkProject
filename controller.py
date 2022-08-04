@@ -13,9 +13,13 @@ from service.ticket import TicketService
 
 def add_routes(app: Flask):
     @app.route('/')
-    @app.route('/index')
-    def index():
-        return render_template("index.html")
+    @app.route('/login')
+    def login_page():
+        return render_template("login.html")
+
+    @app.route('/register')
+    def register_page():
+        return render_template("register.html", user=None)
 
     @app.route('/api/user/login', methods=['POST'])
     def login():
@@ -23,6 +27,8 @@ def add_routes(app: Flask):
         password = request.form['password']
 
         user = UserService.login(username, password)
+        if user is None:
+            return json.dumps({'success': False})
         access_token = TokenService.generateToken(user)
         return json.dumps({'success': True, 'token': access_token})
 
@@ -31,9 +37,11 @@ def add_routes(app: Flask):
     def register():
         username = request.form['username']
         password = request.form['password']
+        firstname = request.form['firstname']
+        lastname = request.form['lastname']
 
         try:
-            user = UserService.register(username, password)
+            user = UserService.register(username, password, firstname, lastname)
         except DuplicateKeyError:
             return json.dumps({'success': False})
         access_token = TokenService.generateToken(user)
