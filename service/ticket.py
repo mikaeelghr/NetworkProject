@@ -3,8 +3,8 @@ from models import Ticket
 
 class TicketService:
     @staticmethod
-    def create_ticket(username, message):
-        Ticket.objects.create(username=username, messages=[message], state='NEW')
+    def create_ticket(user_id, message):
+        Ticket.objects.create(user=user_id, messages=[message], state='NEW')
 
     @staticmethod
     def change_ticket_state(ticket_id, state):

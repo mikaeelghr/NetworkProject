@@ -1,18 +1,17 @@
 $("#loginbtn").on("click", function(){
     var user = $("#username").val();
     var password = $("#password").val();
-    var nextURL = $("#nextURL").val();
 
     $("#loader").html('<img src="/static/images/loader.gif">');
 
-    $.post("/user/login", {username: user, password: password}, function (response) {
+    $.post("/api/user/login", {username: user, password: password}, function (response) {
 
       $("#loader").html('');
       var response = JSON.parse(response);
 
       if (response.success) {
         window.localStorage.setItem('ACCESS_TOKEN', response.token);
-        window.location.href = nextURL;
+        window.location.href = "/tickets/new";
       }
       else {
          $("#loader").html('<p class="alert alert-danger">نام کاربری یا رمز عبور اشتباه است</p>');
@@ -21,8 +20,7 @@ $("#loginbtn").on("click", function(){
 });
 
 $("#logoutbtn").on("click", function(){
-    $.post("/user/logout", {action: 'logout'}, function (response) {
-        window.location.href = "index.php";
+    $.post("/api/user/logout", {action: 'logout'}, function (response) {
     });
 });
 
