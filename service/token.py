@@ -7,9 +7,9 @@ import models
 
 def authenticate_with_token(f, allowed_roles, *args, **kwargs):
     token = None
-    if "Authorization" in request.headers:
-        token = request.headers["Authorization"].split(" ")[1]
-    if not token:
+    if "TOKEN" in request.cookies:
+        token = request.cookies["TOKEN"]
+    if not token or token == "":
         return {
                    "message": "Authentication Token is missing!",
                    "data": None,

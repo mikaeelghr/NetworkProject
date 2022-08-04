@@ -1,6 +1,9 @@
 body {
-  padding-top: 40px;
+  padding-top: 70px;
   padding-bottom: 40px;
+  unicode-bidi: bidi-override !important;
+  text-align:right;
+  direction: rtl !important;
   background-color: #eee;
 }
 
@@ -28,7 +31,7 @@ body {
 .form-signin .form-control:focus {
   z-index: 2;
 }
-.form-signin input[type="email"] {
+.form-signin input[type="username"] {
   margin-bottom: -1px;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
@@ -37,4 +40,28 @@ body {
   margin-bottom: 10px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
+}
+
+
+@font-face {
+  font-family: 'vazir';
+  src: url({{ url_for('static', filename='fonts/Vazir.ttf') }}) format("truetype"),
+  local('vazir');
+}
+
+html * {
+  font-family: vazir !important;
+}
+
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 */
+    height: 0;
+}
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }

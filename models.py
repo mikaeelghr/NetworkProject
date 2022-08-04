@@ -5,8 +5,8 @@ import pymongo
 class User(MongoModel):
     username = fields.CharField()
     role = fields.CharField(choices=('USER', 'STAFF', "ADMIN"))
-    first_name = fields.CharField(max_length=30)
-    last_name = fields.CharField(max_length=30)
+    firstname = fields.CharField(max_length=30)
+    lastname = fields.CharField(max_length=30)
     blocked = fields.BooleanField(default=False)
     password = fields.CharField()
 
@@ -21,11 +21,12 @@ class Comment(EmbeddedMongoModel):
     content = fields.CharField()
 
 
-class StreamVideo(MongoModel):
+class Videos(MongoModel):
     title = fields.CharField()
     owner = fields.ReferenceField(User, on_delete=ReferenceField.CASCADE)
     revised_on = fields.DateTimeField()
-    resourceId = fields.CharField()
+    filename = fields.CharField()
+    thumbnail_name = fields.CharField()
     description = fields.CharField()
     comments = fields.EmbeddedDocumentListField(Comment)
 
