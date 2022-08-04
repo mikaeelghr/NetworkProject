@@ -1,7 +1,6 @@
 $("#loginbtn").on("click", function(){
     var user = $("#username").val();
     var password = $("#password").val();
-    var nextURL = $("#nextURL").val();
 
     $("#loader").html('<img src="/static/images/loader.gif">');
 
@@ -12,7 +11,7 @@ $("#loginbtn").on("click", function(){
 
       if (response.success) {
         window.localStorage.setItem('ACCESS_TOKEN', response.token);
-        window.location.href = nextURL;
+        window.location.href = "/tickets/new";
       }
       else {
          $("#loader").html('<p class="alert alert-danger">نام کاربری یا رمز عبور اشتباه است</p>');
