@@ -58,8 +58,8 @@ def add_routes(app: Flask):
     @app.route('/tickets/new_ticket', methods=['POST'])
     @must_be_user
     def new_ticket():
-        username = request.user.username
+        user_id = request.user.id
         print("HI")
         ticket_message = request.form['ticket_message']
-        TicketService.create_ticket(username=username, message=ticket_message)
+        TicketService.create_ticket(user_id=user_id, message=ticket_message)
         return json.dumps({'success': True})

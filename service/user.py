@@ -4,7 +4,7 @@ from models import User
 class UserService:
     @staticmethod
     def login(username, password):
-        user = User.objects.get({'username':username, 'password':password})
+        user = User.objects.get({'username': username, 'password': password})
         return user if user is not None else False
 
     # TODO: encrypt password

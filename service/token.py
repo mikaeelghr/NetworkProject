@@ -20,7 +20,7 @@ def authenticate_with_token(f, allowed_roles, *args, **kwargs):
         if data['role'] not in allowed_roles:
             abort(404)
         if data['role'] != "ADMIN":
-            current_user = models.User.objects.get(username=data["username"])
+            current_user = models.User.objects.get({"username": data["username"]})
             if current_user is None:
                 return {
                            "message": "Invalid Authentication token!",
