@@ -3,18 +3,15 @@ $("#send_button").on("click", function(){
 
     $("#loader").html('<img src="/static/images/loader.gif">');
 
-    $.post("/tickets/new_ticket", {ticket_message: ticket_message}, function (response) {
-
-      $("#loader").html('');
-      var response = JSON.parse(response);
-
-      if (response.success) {
-//        window.localStorage.setItem('ACCESS_TOKEN', response.token);
-//        window.location.href = nextURL;
-      }
-      else {
-         $("#loader").html('<p class="alert alert-danger">An error has been occurred during the creation of ticket </p>');
-      }
+    var token = window.localStorage.getItem('ACCESS_TOKEN');
+    $.ajax({
+        url: "/tickets/new_ticket",
+        headers: {"Authorization": "Token "+token},
+        data: {ticket_message: message},
+        type: "POST",
+        success: function() {
+            console.log("success");
+        }
     });
 });
 $("#cancel_button").on("click", function(){
