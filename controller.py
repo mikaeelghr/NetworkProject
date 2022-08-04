@@ -66,3 +66,9 @@ def add_routes(app: Flask):
         ticket_message = request.form['ticket_message']
         TicketService.create_ticket(user_id=user_id, message=ticket_message)
         return json.dumps({'success': True})
+
+    @app.route('/tickets/<ticket_id>', methods=['GET'])
+    def show_ticket(ticket_id):
+        ticket = TicketService.get_ticket_by_id(ticket_id)
+        user = UserService.get_user_by_id(ticket.user)
+        return render_template('ticket.html', ticket=ticket, user=user)

@@ -21,3 +21,8 @@ class TicketService:
     @staticmethod
     def get_user_tickets(username):
         return list(Ticket.objects.raw({'username': username}))
+
+    @staticmethod
+    def get_ticket_by_id(id):
+        ticket = Ticket.objects.get({'_id': id})
+        return ticket

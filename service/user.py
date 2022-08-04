@@ -20,3 +20,7 @@ class UserService:
             return User.objects.create(username='admin', password='admin', role="ADMIN")
         except DuplicateKeyError:
             pass
+
+    @staticmethod
+    def get_user_by_id(user_id):
+        return User.objects.get({'_id':user_id})

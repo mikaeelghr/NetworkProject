@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<form>
+    <h2>State: {{ticket.state}}</h2><br>
+    {% for message in ticket.messages %}
+        <h1>{{message}}</h1><br>
+    {% endfor %}
+    {% if ticket.state != "CLOSED" %}
+        <textarea id="ticket_message" placeholder="input your message here" rows="4" cols="50">
+        </textarea>
+        <br>
+        <button id="add_message_button" type="button">send</button>
+        {% if ticket.assignee_user_id == user._id %}
+            <select name="select_state" id="select_state">
+                <option hidden disabled selected value> -- select an option -- </option>
+                <option value="Waiting">Waiting</option>
+                <option value="Closed">Closed</option>
+                <option value="Solved">Solved</option>
+            </select>
+        {% endif %}
+    {% endif %}
+
+
+</form>
+{% endblock %}
