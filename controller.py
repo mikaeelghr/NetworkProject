@@ -3,6 +3,7 @@ from flask import render_template
 from flask import redirect, url_for
 import json
 
+from pymodm.errors import ValidationError
 from pymongo.errors import DuplicateKeyError
 
 from service.token import must_be_user, TokenService
@@ -43,7 +44,9 @@ def add_routes(app: Flask):
         try:
             user = UserService.register(username, password, firstname, lastname)
         except DuplicateKeyError:
-            return json.dumps({'success': False})
+            return json.dumps({'success': False, "message": "نام کاربری تکراری است"})
+        except ValidationError:
+            return json.dumps({'success': False, "message": "مقادیر را درست وارد کنید"})
         access_token = TokenService.generateToken(user)
         return json.dumps({'success': True, 'token': access_token})
 
