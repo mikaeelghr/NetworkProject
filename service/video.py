@@ -3,6 +3,7 @@ import os
 from werkzeug.utils import secure_filename
 
 from config import Videos_Folder
+from models import Videos
 
 ALLOWED_EXTENSIONS = {'mp4', 'mkv'}
 
@@ -19,3 +20,7 @@ class VideoService:
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(Videos_Folder + username, filename))
+
+    @staticmethod
+    def get_list():
+        return Videos.objects.all()

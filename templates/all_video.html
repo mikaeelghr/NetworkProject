@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<link href="{{ url_for('static', filename='css/profile.css') }}" rel="stylesheet">
+
+<div class="box">
+    <ul class="directory-list">
+        <li class="folder">همه فیلم ها
+            <ul>
+                {% for c in videos %}
+                <li class="folder">
+                    <a style="font-weight:normal" href="{{c.name}}">{{c.title}}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </li>
+    </ul>
+</div>
+{% endblock %}

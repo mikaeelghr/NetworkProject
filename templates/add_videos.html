@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="container">
+    <div class="card" style="margin-bottom: 20px">
+        <div class="card-header">آپلود ویدیو
+        </div>
+        <div class="card-body">
+            <p>
+                از این قسمت میتوانید به سادگی ویدیو خود را آپلود کنید
+            </p>
+            <div class="row">
+                <div class="col-md-12">
+                    <form id="inputForm" action="/videos/upload/" method="post">
+                        <fieldset>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <input type="text" name="name" placeholder="نام انگلیسی" class="form-control"
+                                           required="">
+                                    <input type="text" name="title" placeholder="تیتر فارسی" class="form-control"
+                                           required="">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <input class="form-control" placeholder="فایل" name="file" type="file"
+                                       required="">
+                            </div>
+                            <div class="form-group">
+                                {% for tag in form_all_tags %}
+                                <input type="checkbox" name="tag" id="tag{{ forloop.counter }}" value="{{tag}}" checked>
+                                <label for="tag{{ forloop.counter }}">{{ tag }}</label>
+                                <br>
+                                {% endfor %}
+                            </div>
+                            {% if success == True %}
+                            <div class="alert" role="alert">
+                                {{ success_desc | safe }}
+                            </div>
+                            {% endif %}
+                            {% if error == "error" %}
+                            <div class="alert alert-danger" role="alert">
+                                {{ error_desc }}
+                            </div>
+                            {% endif %}
+                            <button type="submit" class="btn btn-success btn-block">آپلود</button>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
