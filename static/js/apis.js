@@ -17,7 +17,7 @@ $("#loginbtn").on("click", function(){
     var password = $("#password").val();
 
     $.post("/api/user/login", {username: user, password: password}, function (response) {
-        handleResponse("/62ec07f01dc186d83cbfdc8d/tickets/62ec08a0db08660f43c0dcf8", response, function ({token}) { window.localStorage.setItem('ACCESS_TOKEN', token) }, "نام کاربری یا رمز عبور اشتباه است");
+        handleResponse("/videos/list", response, function ({token}) { window.localStorage.setItem('ACCESS_TOKEN', token) }, "نام کاربری یا رمز عبور اشتباه است");
     });
 });
 
