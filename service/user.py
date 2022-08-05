@@ -2,6 +2,7 @@ from pymodm.errors import DoesNotExist
 from pymongo.errors import DuplicateKeyError
 
 from models import User
+from bson import ObjectId
 
 
 class UserService:
@@ -25,3 +26,11 @@ class UserService:
             return User.objects.create(username='admin', password='admin', role="ADMIN")
         except DuplicateKeyError:
             pass
+
+    @staticmethod
+    def get_user_by_id(user_id):
+        return User.objects.get({"_id": ObjectId(user_id)})
+
+    @staticmethod
+    def get_admin_id():
+        return User.objects.get({"username": "admin"})._id
