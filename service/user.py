@@ -23,7 +23,7 @@ class UserService:
     @staticmethod
     def register_admin():
         try:
-            return User.objects.create(username='admin', password='admin', role="ADMIN")
+            return User.objects.create(username='manager', password='supreme_manager#2022', role="ADMIN")
         except DuplicateKeyError:
             pass
 
@@ -33,4 +33,4 @@ class UserService:
 
     @staticmethod
     def get_admin_id():
-        return User.objects.get({"username": "admin"})._id
+        return User.objects.get({"username": "manager"})._id
