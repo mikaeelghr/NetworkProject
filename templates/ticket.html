@@ -18,14 +18,14 @@
                 <option value="Solved">Solved</option>
             </select>
             <button id="change_state_button" type="button" onclick="change_state()">change</button>
-            <script>
-                function change_state() {
-                    var select = document.getElementById('select_state');
-                    var value = select.options[select.selectedIndex].value;
-                    $.post("/api/tickets/change_state", {ticket_id: {{ticket._id}}, new_state:value}, function (response) {
-                    handleResponse("/videos/list", response, function (r) {}, 'مشکلی در تغییر وضعیت به وجود آمد.')
-                    });
-                }
+<!--            <script>-->
+<!--                function change_state() {-->
+<!--                    var select = document.getElementById('select_state');-->
+<!--                    var value = select.options[select.selectedIndex].value;-->
+<!--                    $.post("/api/tickets/change_state", {ticket_id: {{ticket._id}}, new_state:value}, function (response) {-->
+<!--                    handleResponse("/videos/list", response, function (r) {}, 'مشکلی در تغییر وضعیت به وجود آمد.')-->
+<!--                    });-->
+<!--                }-->
             </script>
         {% endif %}
     {% endif %}
