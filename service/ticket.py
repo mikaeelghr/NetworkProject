@@ -19,6 +19,7 @@ class TicketService:
 
     @staticmethod
     def add_message(ticket_id, username, message):
+        print("3")
         ticket = Ticket.objects.get({'_id': ObjectId(ticket_id)})
         ticket.messages.append(username + ': ' + message)
         ticket.save()

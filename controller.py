@@ -30,7 +30,6 @@ def add_routes(app: Flask):
 
     @app.route('/api/user/login', methods=['POST'])
     def login():
-        print("HI1")
         username = request.form['username']
         password = request.form['password']
 
@@ -106,9 +105,9 @@ def add_routes(app: Flask):
 
     @app.route('/<user_id>/tickets/<ticket_id>', methods=['GET'])
     def show_ticket(user_id, ticket_id):
-        print("HI")
         user = UserService.get_user_by_id(user_id)
         ticket = TicketService.get_ticket_by_id(ticket_id)
+        print(user._id, ticket.assignee_user_id)
         return render_template('ticket.html', ticket=ticket, user=user)
 
     @app.route('/api/tickets/add_message', methods=['POST'])
