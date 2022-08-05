@@ -77,6 +77,28 @@ $("#cancel_button").on("click", function(){
 //    window.location.href = prev_url;
 });
 
+$("#new_comment_button").on("click", function(){
+    var message = $("#comment_message").val();
+    var video_id = $("#video_id_input").val();
+    $.post("/api/comments/new", {videoId: video_id, message}, function (response) {
+        handleResponse(window.location.href, response, function (r) {}, 'مشکلی در نظر دادن پیش آمد.')
+    });
+});
+$("#like_video").on("click", function(){
+    console.log("Dwf");
+    var video_id = $("#video_id_input").val();
+    console.log(video_id);
+    $.post("/api/like", {videoId: video_id}, function (response) {
+        handleResponse(window.location.href, response, function (r) {}, 'مشکلی پیش آمد.')
+    });
+});
+$("#dislike_video").on("click", function(){
+    var video_id = $("#video_id_input").val();
+    $.post("/api/dislike", {videoId: video_id}, function (response) {
+        handleResponse(window.location.href, response, function (r) {}, 'مشکلی پیش آمد.')
+    });
+});
+
 $("#add_message_button").on("click", function(){
     var message = $("#new_ticket_message").val();
     var ticket_id = $("#ticket_id").val();

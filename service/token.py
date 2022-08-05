@@ -10,11 +10,15 @@ def authenticate_with_token(f, allowed_roles, *args, **kwargs):
     if "TOKEN" in request.cookies:
         token = request.cookies["TOKEN"]
     if not token or token == "":
-        return {
-                   "message": "Authentication Token is missing!",
-                   "data": None,
-                   "error": "Unauthorized"
-               }, 401
+        if 'NONE' in allowed_roles:
+            request.authenticated = False
+            return f(*args, **kwargs)
+        else:
+            return {
+                       "message": "Authentication Token is missing!",
+                       "data": None,
+                       "error": "Unauthorized"
+                   }, 401
     try:
         data = jwt.decode(token, current_app.config["SECRET_KEY"], algorithms=["HS256"])
         if data['role'] not in allowed_roles:
@@ -28,6 +32,7 @@ def authenticate_with_token(f, allowed_roles, *args, **kwargs):
                    }, 401
         if current_user.blocked:
             abort(403)
+        request.authenticated = True
         request.user = current_user
         return f(*args, **kwargs)
     except Exception as e:
@@ -50,6 +55,14 @@ def must_be_authenticated(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         return authenticate_with_token(f, ["USER", "STAFF"], *args, **kwargs)
+
+    return decorated
+
+
+def authenticate_if_token_exists(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        return authenticate_with_token(f, ["USER", "STAFF", "NONE"], *args, **kwargs)
 
     return decorated
 

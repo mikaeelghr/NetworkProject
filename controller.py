@@ -6,7 +6,8 @@ import json
 from pymodm.errors import ValidationError
 from pymongo.errors import DuplicateKeyError
 
-from service.token import must_be_user, TokenService, must_be_authenticated, must_be_admin, must_be_staff
+from service.token import must_be_user, TokenService, must_be_authenticated, must_be_admin, must_be_staff, \
+    authenticate_if_token_exists
 from service.user import UserService
 from service.video import VideoService
 from service.ticket import TicketService
@@ -17,16 +18,19 @@ from models import Ticket
 def add_routes(app: Flask):
     @app.route('/')
     @app.route('/login')
+    @authenticate_if_token_exists
     def login_page():
-        return render_template("login.html")
+        return render_template("login.html", authenticated=request.authenticated)
 
     @app.route('/register')
+    @authenticate_if_token_exists
     def register_page():
-        return render_template("register.html", user=None)
+        return render_template("register.html", authenticated=request.authenticated)
 
     @app.route('/videos/list')
+    @authenticate_if_token_exists
     def get_videos():
-        return render_template("all_video.html", videos=VideoService.get_list())
+        return render_template("all_video.html", videos=VideoService.get_list(), authenticated=request.authenticated)
 
     @app.route('/api/user/login', methods=['POST'])
     def login():
@@ -49,7 +53,6 @@ def add_routes(app: Flask):
         return response
 
     @app.route('/api/user/register', methods=['POST'])
-    # @must_be_admin
     def register():
         username = request.form['username']
         password = request.form['password']
@@ -79,21 +82,23 @@ def add_routes(app: Flask):
             title = request.form['title']
             VideoService.add(str(user_id), name, title, file)
             return render_template("add_video.html", form_all_tags=['سرگرمی', 'آموزشی'], success=True,
-                                   success_desc="ویدیو با موفیت آپلود شد")
+                                   success_desc="ویدیو با موفیت آپلود شد", authenticated=request.authenticated)
         else:
-            return render_template("add_video.html", form_all_tags=['سرگرمی', 'آموزشی'])
+            return render_template("add_video.html", form_all_tags=['سرگرمی', 'آموزشی'],
+                                   authenticated=request.authenticated)
 
     @app.route('/videos/s/<video_id>', methods=['GET'])
-    @must_be_user
+    @authenticate_if_token_exists
     def get_stream_of_user(video_id):
         video = VideoService.get(video_id)
         if video is None:
             return json.dumps({"error": "file not found"})
-        return render_template("show_video.html", video=video)
+        return render_template("show_video.html", video=video, authenticated=request.authenticated)
 
     @app.route('/tickets/new')
+    @authenticate_if_token_exists
     def tickets():
-        return render_template("new_ticket.html")
+        return render_template("new_ticket.html", authenticated=request.authenticated)
 
     @app.route('/api/tickets/new', methods=['POST'])
     @must_be_authenticated
@@ -104,11 +109,11 @@ def add_routes(app: Flask):
         return json.dumps({'success': True})
 
     @app.route('/<user_id>/tickets/<ticket_id>', methods=['GET'])
+    @authenticate_if_token_exists
     def show_ticket(user_id, ticket_id):
         user = UserService.get_user_by_id(user_id)
         ticket = TicketService.get_ticket_by_id(ticket_id)
-        print(user._id, ticket.assignee_user_id)
-        return render_template('ticket.html', ticket=ticket, user=user)
+        return render_template('ticket.html', ticket=ticket, user=user, authenticated=request.authenticated)
 
     @app.route('/api/tickets/add_message', methods=['POST'])
     def add_message():
@@ -123,4 +128,29 @@ def add_routes(app: Flask):
         ticket_id = request.form['ticket_id']
         new_state = request.form['new_state']
         TicketService.change_state(ticket_id, new_state)
+        return json.dumps({'success': True})
+
+    @app.route('/api/comments/new', methods=['POST'])
+    @must_be_authenticated
+    def new_comment():
+        video_id = request.form['videoId']
+        message = request.form['message']
+        user_id = str(request.user._id)
+        VideoService.add_comment(video_id, user_id, message)
+        return json.dumps({'success': True})
+
+    @app.route('/api/like', methods=['POST'])
+    @must_be_authenticated
+    def like_video():
+        video_id = request.form['videoId']
+        user_id = str(request.user._id)
+        VideoService.like(video_id, user_id)
+        return json.dumps({'success': True})
+
+    @app.route('/api/dislike', methods=['POST'])
+    @must_be_authenticated
+    def dislike_video():
+        video_id = request.form['videoId']
+        user_id = str(request.user._id)
+        VideoService.dislike(video_id, user_id)
         return json.dumps({'success': True})
