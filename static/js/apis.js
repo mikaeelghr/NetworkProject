@@ -77,9 +77,10 @@ $("#cancel_button").on("click", function(){
 //    window.location.href = prev_url;
 });
 
-$("#add_message_button").on("click", function(){
-    var message = $("new_ticket_message").val();
-    $.post("/api/tickets/add_message", {ticket_id: {{ticket._id}}, username: {{user.username}}, ticket_message:message}, function (response) {
-        handleResponse('/videos/list', response, function (r) {}, 'مشکلی در اضافه کردن پیام پیش آمد.')
+$("#new_comment_button").on("click", function(){
+    var message = $("#comment_message").val();
+    var video_id = $("#video_id_input").val();
+    $.post("/api/comments/new", {videoId: video_id, message}, function (response) {
+        handleResponse(window.location.href, response, function (r) {}, 'مشکلی در نظر دادن پیش آمد.')
     });
 });

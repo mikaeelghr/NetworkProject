@@ -125,3 +125,12 @@ def add_routes(app: Flask):
         new_state = request.form['new_state']
         TicketService.change_state(ticket_id, new_state)
         return json.dumps({'success': True})
+
+    @app.route('/api/comments/new', methods=['POST'])
+    @must_be_authenticated
+    def new_comment():
+        video_id = request.form['videoId']
+        message = request.form['message']
+        user_id = str(request.user._id)
+        VideoService.add_comment(video_id, user_id, message)
+        return json.dumps({'success': True})
