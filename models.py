@@ -29,6 +29,8 @@ class Videos(MongoModel):
     thumbnail_name = fields.CharField()
     description = fields.CharField()
     comments = fields.EmbeddedDocumentListField(Comment)
+    likes = fields.ListField(blank=True)
+    dislikes = fields.ListField(blank=True)
 
 
 class Ticket(MongoModel):

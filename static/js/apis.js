@@ -84,3 +84,17 @@ $("#new_comment_button").on("click", function(){
         handleResponse(window.location.href, response, function (r) {}, 'مشکلی در نظر دادن پیش آمد.')
     });
 });
+$("#like_video").on("click", function(){
+    console.log("Dwf");
+    var video_id = $("#video_id_input").val();
+    console.log(video_id);
+    $.post("/api/like", {videoId: video_id}, function (response) {
+        handleResponse(window.location.href, response, function (r) {}, 'مشکلی پیش آمد.')
+    });
+});
+$("#dislike_video").on("click", function(){
+    var video_id = $("#video_id_input").val();
+    $.post("/api/dislike", {videoId: video_id}, function (response) {
+        handleResponse(window.location.href, response, function (r) {}, 'مشکلی پیش آمد.')
+    });
+});

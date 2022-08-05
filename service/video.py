@@ -48,3 +48,21 @@ class VideoService:
         comment.content = message
         video.comments.append(comment)
         video.save()
+
+    @staticmethod
+    def like(_id, user_id):
+        video = Videos.objects.get({"_id": ObjectId(_id)})
+        if user_id not in video.likes:
+            video.likes.append(user_id)
+        else:
+            video.likes.remove(user_id)
+        video.save()
+
+    @staticmethod
+    def dislike(_id, user_id):
+        video = Videos.objects.get({"_id": ObjectId(_id)})
+        if user_id not in video.dislikes:
+            video.dislikes.append(user_id)
+        else:
+            video.dislikes.remove(user_id)
+        video.save()

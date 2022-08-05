@@ -84,7 +84,8 @@ def add_routes(app: Flask):
             return render_template("add_video.html", form_all_tags=['سرگرمی', 'آموزشی'], success=True,
                                    success_desc="ویدیو با موفیت آپلود شد", authenticated=request.authenticated)
         else:
-            return render_template("add_video.html", form_all_tags=['سرگرمی', 'آموزشی'], authenticated=request.authenticated)
+            return render_template("add_video.html", form_all_tags=['سرگرمی', 'آموزشی'],
+                                   authenticated=request.authenticated)
 
     @app.route('/videos/s/<video_id>', methods=['GET'])
     @authenticate_if_token_exists
@@ -136,4 +137,20 @@ def add_routes(app: Flask):
         message = request.form['message']
         user_id = str(request.user._id)
         VideoService.add_comment(video_id, user_id, message)
+        return json.dumps({'success': True})
+
+    @app.route('/api/like', methods=['POST'])
+    @must_be_authenticated
+    def like_video():
+        video_id = request.form['videoId']
+        user_id = str(request.user._id)
+        VideoService.like(video_id, user_id)
+        return json.dumps({'success': True})
+
+    @app.route('/api/dislike', methods=['POST'])
+    @must_be_authenticated
+    def dislike_video():
+        video_id = request.form['videoId']
+        user_id = str(request.user._id)
+        VideoService.dislike(video_id, user_id)
         return json.dumps({'success': True})
