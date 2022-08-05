@@ -6,10 +6,12 @@ import json
 from pymodm.errors import ValidationError
 from pymongo.errors import DuplicateKeyError
 
-from service.token import must_be_user, TokenService
+from service.token import must_be_user, TokenService, must_be_authenticated, must_be_admin, must_be_staff
 from service.user import UserService
 from service.video import VideoService
 from service.ticket import TicketService
+
+from models import Ticket
 
 
 def add_routes(app: Flask):
@@ -28,6 +30,7 @@ def add_routes(app: Flask):
 
     @app.route('/api/user/login', methods=['POST'])
     def login():
+        print("HI1")
         username = request.form['username']
         password = request.form['password']
 
@@ -94,15 +97,31 @@ def add_routes(app: Flask):
         return render_template("new_ticket.html")
 
     @app.route('/api/tickets/new', methods=['POST'])
-    @must_be_user
+    @must_be_authenticated
     def new_ticket():
         user_id = request.user._id
-        ticket_message = request.form['ticket_message']
-        TicketService.create_ticket(user_id=user_id, message=ticket_message)
+        ticket_message = request.user.username + ': ' + request.form['ticket_message']
+        TicketService.create_ticket(user_id=user_id, user_role=request.user.role, message=ticket_message)
         return json.dumps({'success': True})
 
-    @app.route('/tickets/<ticket_id>', methods=['GET'])
-    def show_ticket(ticket_id):
+    @app.route('/<user_id>/tickets/<ticket_id>', methods=['GET'])
+    def show_ticket(user_id, ticket_id):
+        print("HI")
+        user = UserService.get_user_by_id(user_id)
         ticket = TicketService.get_ticket_by_id(ticket_id)
-        user = UserService.get_user_by_id(ticket.user)
         return render_template('ticket.html', ticket=ticket, user=user)
+
+    @app.route('/api/tickets/add_message', methods=['POST'])
+    def add_message():
+        ticket_id = request.form['ticket_id']
+        username = request.form['username']
+        ticket_message = request.form['ticket_message']
+        TicketService.add_message(ticket_id, username, ticket_message)
+        return json.dumps({'success': True})
+
+    @app.route('/api/tickets/change_state', methods=['POST'])
+    def change_state():
+        ticket_id = request.form['ticket_id']
+        new_state = request.form['new_state']
+        TicketService.change_state(ticket_id, new_state)
+        return json.dumps({'success': True})

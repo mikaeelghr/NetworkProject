@@ -17,7 +17,7 @@ $("#loginbtn").on("click", function(){
     var password = $("#password").val();
 
     $.post("/api/user/login", {username: user, password: password}, function (response) {
-        handleResponse("/videos/list", response, function ({token}) { window.localStorage.setItem('ACCESS_TOKEN', token) }, "نام کاربری یا رمز عبور اشتباه است");
+        handleResponse("/62ec07f01dc186d83cbfdc8d/tickets/62ec08a0db08660f43c0dcf8", response, function ({token}) { window.localStorage.setItem('ACCESS_TOKEN', token) }, "نام کاربری یا رمز عبور اشتباه است");
     });
 });
 
@@ -65,7 +65,7 @@ $("#registerRedirectBtn").on("click", function(){
     window.location.href = "/register";
 });
 
-$("#send_button").on("click", function(){
+$("#new_ticket_button").on("click", function(){
     var message = $("#ticket_message").val();
 
     $.post("/api/tickets/new", {ticket_message: message}, function (response) {
@@ -74,5 +74,12 @@ $("#send_button").on("click", function(){
 });
 
 $("#cancel_button").on("click", function(){
-    window.location.href = prev_url;
+//    window.location.href = prev_url;
+});
+
+$("#add_message_button").on("click", function(){
+    var message = $("new_ticket_message").val();
+    $.post("/api/tickets/add_message", {ticket_id: {{ticket._id}}, username: {{user.username}}, ticket_message:message}, function (response) {
+        handleResponse('/videos/list', response, function (r) {}, 'مشکلی در اضافه کردن پیام پیش آمد.')
+    });
 });
