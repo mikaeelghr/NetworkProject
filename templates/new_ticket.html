@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 
 {% block body %}
+<link href="{{ url_for('static', filename='css/profile.css') }}" rel="stylesheet">
+<div class="box">
+<div style="margin-bottom: 20px"></div>
 <form>
     <textarea id="ticket_message" placeholder="input your message here" rows="4" cols="50" required></textarea>
     <br>
@@ -8,4 +11,5 @@
     <button id="cancel_button" type="button">cancel</button>
 
 </form>
+</div>
 {% endblock %}

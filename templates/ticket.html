@@ -1,11 +1,14 @@
 {% extends 'base.html' %}
 
 {% block body %}
+<link href="{{ url_for('static', filename='css/profile.css') }}" rel="stylesheet">
+<div class="box">
+<div style="margin-bottom: 20px"></div>
 <form>
-    <h2>State: {{ticket.state}}</h2><br>
     {% for message in ticket.messages %}
-    <h1>{{message}}</h1><br>
+    <h4>{{message}}</h4><br>
     {% endfor %}
+    <h4>وضعیت: {{ticket.state}}</h4><br>
     {% if ticket.state != "CLOSED" %}
         {% if ticket.assignee_user_id._id == user._id %}
             <br>
@@ -34,4 +37,5 @@
 
 
 </form>
+</div>
 {% endblock %}
