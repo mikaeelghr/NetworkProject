@@ -42,3 +42,13 @@ class TicketService:
     @staticmethod
     def get_assigned_tickets(user_id):
         return list(Ticket.objects.raw({'assignee_user_id': ObjectId(user_id)}))
+
+    @staticmethod
+    def assign_ticket(user):
+        try:
+            ticket = Ticket.objects.get({'state':'NEW'})
+            ticket.assignee_user_id=user
+            ticket.state = "WAITING"
+            ticket.save()
+        except:
+            pass
