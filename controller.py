@@ -166,10 +166,16 @@ def add_routes(app: Flask):
     @must_be_authenticated
     def my_tickets():
         tickets = TicketService.get_user_tickets(request.user._id)
-        return render_template('my_tickets.html', tickets=tickets, user_id=request.user._id, authenticated=request.authenticated)
+        return render_template('my_tickets.html', assigned_page=False , tickets=tickets, user_id=request.user._id, authenticated=request.authenticated)
 
     @app.route("/tickets/assigned_tickets", methods=['GET'])
     @must_be_supervisor
     def assigned_tickets():
         tickets = TicketService.get_assigned_tickets(request.user._id)
-        return render_template('my_tickets.html', tickets=tickets, user_id=request.user._id, authenticated=request.authenticated)
+        return render_template('my_tickets.html', assigned_page=True, tickets=tickets, user_id=request.user._id, authenticated=request.authenticated)
+
+    @app.route("/tickets/get_ticket", methods=['GET'])
+    @must_be_staff
+    def get_ticket():
+        TicketService.assign_ticket(request.user)
+        return redirect(url_for("assigned_tickets"))

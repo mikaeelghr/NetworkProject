@@ -5,8 +5,11 @@
 <div class="box">
 <div style="margin-bottom: 20px"></div>
 
-
-<a href="/tickets/new">تیکت جدید</a>
+{% if assigned_page==False %}
+    <a href="/tickets/new">تیکت جدید</a>
+    {% else %}
+    <a href="/tickets/get_ticket">دریافت تیکت</a>
+    {% endif %}
 <table style="width:100%">
     <tr>
         <th>شماره</th>
