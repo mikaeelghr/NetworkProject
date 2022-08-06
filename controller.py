@@ -12,8 +12,6 @@ from service.user import UserService
 from service.video import VideoService
 from service.ticket import TicketService
 
-from models import Ticket
-
 
 def add_routes(app: Flask):
     @app.route('/')
@@ -80,7 +78,10 @@ def add_routes(app: Flask):
             file = request.files['file']
             name = request.form['name']
             title = request.form['title']
-            VideoService.add(str(user_id), name, title, file)
+            try:
+                VideoService.add(str(user_id), name, title, file)
+            except Exception:
+                return json.dumps({"success": False, "error": "invalid file type"})
             return render_template("add_video.html", form_all_tags=['سرگرمی', 'آموزشی'], success=True,
                                    success_desc="ویدیو با موفیت آپلود شد", authenticated=request.authenticated)
         else:
@@ -157,10 +158,8 @@ def add_routes(app: Flask):
         VideoService.dislike(video_id, user_id)
         return json.dumps({'success': True})
 
-
-    @app.route('/tickets/my_tickets', methods = ['GET'])
+    @app.route('/tickets/my_tickets', methods=['GET'])
     @must_be_authenticated
     def my_tickets():
         tickets = TicketService.get_user_tickets(request.user._id)
         return render_template('my_tickets.html', tickets=tickets, user_id=request.user._id)
-
