@@ -166,4 +166,4 @@ def add_routes(app: Flask):
     @must_be_authenticated
     def my_tickets():
         tickets = TicketService.get_user_tickets(request.user._id)
-        return render_template('my_tickets.html', tickets=tickets, user_id=request.user._id)
+        return render_template('my_tickets.html', tickets=tickets, user_id=request.user._id, authenticated=request.authenticated    )

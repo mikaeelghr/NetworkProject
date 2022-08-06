@@ -17,7 +17,7 @@
                 <option value="CLOSED">Closed</option>
                 <option value="SOLVED">Solved</option>
             </select>
-            <button id="change_state_button" type="button">change</button>
+            <button id="change_state_button" type="button">تغییر</button>
             <script>
                 function change_state() {
                     var select = document.getElementById('select_state');
@@ -29,9 +29,9 @@
         {% endif %}
         <input id="ticket_id" type="hidden" value="{{ticket._id}}">
         <input id="username" type="hidden" value="{{user.username}}">
-        <textarea id="new_ticket_message" placeholder="input your message here" rows="4" cols="50"></textarea>
+        <textarea id="new_ticket_message" placeholder="پیام خود را اینجا وارد کنید" rows="4" cols="50"></textarea>
         <br>
-        <button id="add_message_button" type="button">send</button>
+        <button id="add_message_button" type="button">ارسال</button>
 
     {% endif %}
 
