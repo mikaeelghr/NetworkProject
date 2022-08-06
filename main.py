@@ -2,6 +2,7 @@ from flask import Flask
 
 from config import MONGO_URL, SECRET_KEY, STAFF_IP
 from controller import add_routes
+from flask import request
 from pymodm import connect
 import git
 
@@ -19,9 +20,9 @@ if __name__ == "__main__":
 
     @app.route('/git_update', methods=['POST'])
     def git_update():
+        print(request.form)
         repo = git.Repo('.')
         origin = repo.remotes.origin
-        repo.create_head('main', origin.refs.main).set_tracking_branch(origin.refs.main).checkout()
         origin.pull()
         return '', 200
 
