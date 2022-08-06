@@ -7,11 +7,6 @@
     <h1>{{message}}</h1><br>
     {% endfor %}
     {% if ticket.state != "CLOSED" %}
-        <input id="ticket_id" type="hidden" value="{{ticket._id}}">
-        <input id="username" type="hidden" value="{{user.username}}">
-        <textarea id="new_ticket_message" placeholder="input your message here" rows="4" cols="50"></textarea>
-        <br>
-        <button id="add_message_button" type="button">send</button>
         {% if ticket.assignee_user_id._id == user._id %}
             <br>
             <select name="select_state" id="select_state">
@@ -21,14 +16,20 @@
             </select>
             <button id="change_state_button" type="button">change</button>
             <script>
-                        function change_state() {
-                            var select = document.getElementById('select_state');
-                            var value = select.options[select.selectedIndex].value;
-                            $.post("/api/tickets/change_state", {ticket_id: {{ticket._id}}, new_state:value}, function (response) { handleResponse("/videos/list", response, function (r) {}, 'مشکلی در تغییر وضعیت به وجود آمد.')});
-                        }
+                function change_state() {
+                    var select = document.getElementById('select_state');
+                    var value = select.options[select.selectedIndex].value;
+                    $.post("/api/tickets/change_state", {ticket_id: {{ticket._id}}, new_state:value}, function (response) { handleResponse("/videos/list", response, function (r) {}, 'مشکلی در تغییر وضعیت به وجود آمد.')});
+                }
 
             </script>
         {% endif %}
+        <input id="ticket_id" type="hidden" value="{{ticket._id}}">
+        <input id="username" type="hidden" value="{{user.username}}">
+        <textarea id="new_ticket_message" placeholder="input your message here" rows="4" cols="50"></textarea>
+        <br>
+        <button id="add_message_button" type="button">send</button>
+
     {% endif %}
 
 

@@ -31,8 +31,9 @@ class TicketService:
         ticket.save()
 
     @staticmethod
-    def get_user_tickets(username):
-        return list(Ticket.objects.raw({'username': username}))
+    def get_user_tickets(user_id):
+        print(list(Ticket.objects.raw({'user': ObjectId(user_id)})))
+        return list(Ticket.objects.raw({'user': ObjectId(user_id)}))
 
     @staticmethod
     def get_ticket_by_id(ticket_id):

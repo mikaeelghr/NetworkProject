@@ -111,12 +111,11 @@ def add_routes(app: Flask):
         TicketService.create_ticket(user_id=user_id, user_role=request.user.role, message=ticket_message)
         return json.dumps({'success': True})
 
-    @app.route('/<user_id>/tickets/<ticket_id>', methods=['GET'])
+    @app.route('/tickets/<ticket_id>', methods=['GET'])
     @authenticate_if_token_exists
-    def show_ticket(user_id, ticket_id):
-        user = UserService.get_user_by_id(user_id)
+    def show_ticket(ticket_id):
         ticket = TicketService.get_ticket_by_id(ticket_id)
-        return render_template('ticket.html', ticket=ticket, user=user, authenticated=request.authenticated)
+        return render_template('ticket.html', ticket=ticket, user=request.user, authenticated=request.authenticated)
 
     @app.route('/api/tickets/add_message', methods=['POST'])
     def add_message():
@@ -157,3 +156,11 @@ def add_routes(app: Flask):
         user_id = str(request.user._id)
         VideoService.dislike(video_id, user_id)
         return json.dumps({'success': True})
+
+
+    @app.route('/tickets/my_tickets', methods = ['GET'])
+    @must_be_authenticated
+    def my_tickets():
+        tickets = TicketService.get_user_tickets(request.user._id)
+        return render_template('my_tickets.html', tickets=tickets, user_id=request.user._id)
+

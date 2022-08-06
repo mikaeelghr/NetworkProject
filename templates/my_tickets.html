@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<link href="{{ url_for('static', filename='css/profile.css') }}" rel="stylesheet">
+
+<div class="box">
+    <ul class="directory-list">
+        <li class="folder">تیکت های من
+            <div style="margin-bottom: 20px"></div>
+            <ul>
+                {% for t in tickets %}
+                <a style="padding:10px;font-weight:normal" href="/tickets/{{t._id}}">
+                    {{loop.index+1}}: state: {{t.state}} {{t.messages[0]}}...
+                </a>
+                <br>
+                {% endfor %}
+            </ul>
+        </li>
+    </ul>
+</div>
+{% endblock %}
