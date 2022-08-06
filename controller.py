@@ -93,7 +93,10 @@ def add_routes(app: Flask):
         video = VideoService.get(video_id)
         if video is None:
             return json.dumps({"error": "file not found"})
-        return render_template("show_video.html", video=video, authenticated=request.authenticated)
+        user_id = None
+        if request.authenticated:
+            user_id = str(request.user._id)
+        return render_template("show_video.html", video=video, user_id=user_id, authenticated=request.authenticated)
 
     @app.route('/tickets/new')
     @authenticate_if_token_exists
