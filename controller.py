@@ -6,7 +6,7 @@ import json
 from pymodm.errors import ValidationError
 from pymongo.errors import DuplicateKeyError
 
-from service.token import must_be_user, TokenService, must_be_authenticated, must_be_admin, must_be_staff, \
+from service.auth import must_be_user, AuthService, must_be_authenticated, must_be_admin, must_be_staff, \
     authenticate_if_token_exists
 from service.user import UserService
 from service.video import VideoService
@@ -40,7 +40,7 @@ def add_routes(app: Flask):
         user = UserService.login(username, password)
         if user is None:
             return json.dumps({'success': False})
-        access_token = TokenService.generateToken(user)
+        access_token = AuthService.generateToken(user)
 
         response = make_response(json.dumps({'success': True, 'token': access_token}))
         response.set_cookie("TOKEN", access_token, httponly=True)
@@ -65,7 +65,7 @@ def add_routes(app: Flask):
             return json.dumps({'success': False, "message": "نام کاربری تکراری است"})
         except ValidationError:
             return json.dumps({'success': False, "message": "مقادیر را درست وارد کنید"})
-        access_token = TokenService.generateToken(user)
+        access_token = AuthService.generateToken(user)
         response = make_response(json.dumps({'success': True, 'token': access_token}))
         response.set_cookie("TOKEN", access_token, httponly=True)
         return response
@@ -93,7 +93,10 @@ def add_routes(app: Flask):
         video = VideoService.get(video_id)
         if video is None:
             return json.dumps({"error": "file not found"})
-        return render_template("show_video.html", video=video, authenticated=request.authenticated)
+        user_id = None
+        if request.authenticated:
+            user_id = str(request.user._id)
+        return render_template("show_video.html", video=video, user_id=user_id, authenticated=request.authenticated)
 
     @app.route('/tickets/new')
     @authenticate_if_token_exists

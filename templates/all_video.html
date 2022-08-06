@@ -4,8 +4,9 @@
 <link href="{{ url_for('static', filename='css/profile.css') }}" rel="stylesheet">
 
 <div class="box">
+    <a href="/videos/upload" class="btn btn-lg btn-block" style="margin-bottom:20px">آپلود ویدیو جدید</a>
     <ul class="directory-list">
-        <li class="folder">همه فیلم ها
+        <li class="folder"> همه فیلم ها
             <div style="margin-bottom: 20px"></div>
             <ul>
                 {% for c in videos %}
@@ -14,7 +15,7 @@
                          width="200" height="200"></img>
                     {{c.title}}
                 </a>
-                <br></br>
+                <br>
                 {% endfor %}
             </ul>
         </li>
