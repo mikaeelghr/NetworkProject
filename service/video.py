@@ -8,7 +8,7 @@ import os
 
 from util.thumb import generate_thumbnail
 
-ALLOWED_EXTENSIONS = {'mp4', 'mkv'}
+ALLOWED_EXTENSIONS = {'mp4', 'mkv', 'webm'}
 
 
 def allowed_file(filename):
@@ -28,6 +28,8 @@ class VideoService:
             file.save(file_path)
             generate_thumbnail(file_path, thumbnail_path)
             Videos.objects.create(title=title, owner=user_id, filename=filename, thumbnail_name=thumbnail_name)
+        else:
+            raise Exception("invalid file type")
 
     @staticmethod
     def get_list():

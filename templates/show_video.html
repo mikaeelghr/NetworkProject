@@ -2,8 +2,10 @@
 
 {% block body %}
 <h1>{{ video.title }}</h1>
-<video src="{{ url_for('static', filename='uploaded_videos') }}/{{video.owner._id}}/{{ video.filename }}" width="800"
-       height="550"></video>
+<video id="player" playsinline controls width="800" height="500"
+       data-poster="{{ url_for('static', filename='uploaded_videos') }}/{{video.owner._id}}/{{ video.thumbnail_name }}"
+       src="{{ url_for('static', filename='uploaded_videos') }}/{{video.owner._id}}/{{ video.filename }}">
+</video>
 
 {% if authenticated %}
 {% if user_id in video.likes %}
