@@ -28,7 +28,11 @@ def add_routes(app: Flask):
     @app.route('/videos/list')
     @authenticate_if_token_exists
     def get_videos():
-        return render_template("all_video.html", videos=VideoService.get_list(), authenticated=request.authenticated)
+        show_upload_btn = None
+        if request.authenticated:
+            show_upload_btn = request.user.role == "USER"
+        return render_template("all_video.html", videos=VideoService.get_list(), show_upload_btn=show_upload_btn,
+                               authenticated=request.authenticated)
 
     @app.route('/api/user/login', methods=['POST'])
     def login():
