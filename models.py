@@ -7,6 +7,7 @@ class User(MongoModel):
     role = fields.CharField(choices=('USER', 'STAFF', "ADMIN"))
     firstname = fields.CharField(max_length=30)
     lastname = fields.CharField(max_length=30)
+    verified = fields.BooleanField(default=True)
     blocked = fields.BooleanField(default=False)
     password = fields.CharField()
 
