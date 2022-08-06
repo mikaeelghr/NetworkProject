@@ -38,3 +38,7 @@ class Ticket(MongoModel):
     messages = fields.ListField()
     state = fields.CharField(choices=('NEW', 'WAITING', 'SOLVED', 'CLOSED'))
     assignee_user_id = fields.ReferenceField(User, on_delete=ReferenceField.CASCADE)
+
+class Req(MongoModel):
+    src = fields.CharField()
+    req_time = fields.DateTimeField()

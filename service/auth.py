@@ -3,6 +3,7 @@ import jwt
 from flask import request, abort
 from flask import current_app
 import models
+from service.req import ReqService
 
 
 class AuthService:
@@ -103,4 +104,16 @@ def must_be_admin(f):
     def decorated(*args, **kwargs):
         return AuthService.authenticate(f, ["ADMIN"], *args, **kwargs)
 
+    return decorated
+
+def ddos_checker(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        thr = 1000
+        ReqService.create_req(request.remote_addr)
+        if ReqService.get_user_recent_reqs(request.remote_addr) > thr:
+            return {"message": "too many requests",
+                               "data": None,
+                               "error": "DDoS"}, 403
+        return f(*args, **kwargs)
     return decorated

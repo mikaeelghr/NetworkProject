@@ -7,7 +7,7 @@ from pymodm.errors import ValidationError
 from pymongo.errors import DuplicateKeyError
 
 from service.auth import must_be_user, AuthService, must_be_authenticated, must_be_admin, must_be_staff, \
-    must_be_supervisor, authenticate_if_token_exists
+    must_be_supervisor, ddos_checker, authenticate_if_token_exists
 from service.user import UserService
 from service.video import VideoService
 from service.ticket import TicketService
@@ -17,16 +17,19 @@ def add_routes(app: Flask):
     @app.route('/')
     @app.route('/login')
     @authenticate_if_token_exists
+    @ddos_checker
     def login_page():
         return render_template("login.html", authenticated=request.authenticated)
 
     @app.route('/register')
     @authenticate_if_token_exists
+    @ddos_checker
     def register_page():
         return render_template("register.html", authenticated=request.authenticated)
 
     @app.route('/videos/list')
     @authenticate_if_token_exists
+    @ddos_checker
     def get_videos():
         show_upload_btn = None
         if request.authenticated:
@@ -35,6 +38,7 @@ def add_routes(app: Flask):
                                authenticated=request.authenticated)
 
     @app.route('/api/user/login', methods=['POST'])
+    @ddos_checker
     def login():
         username = request.form['username']
         password = request.form['password']
@@ -49,12 +53,14 @@ def add_routes(app: Flask):
         return response
 
     @app.route('/logout', methods=['GET'])
+    @ddos_checker
     def logout():
         response = make_response(redirect("/login"))
         response.set_cookie("TOKEN", "", httponly=True)
         return response
 
     @app.route('/api/user/register', methods=['POST'])
+    @ddos_checker
     def register():
         username = request.form['username']
         password = request.form['password']
@@ -74,6 +80,7 @@ def add_routes(app: Flask):
 
     @app.route('/videos/upload/', methods=['GET', 'POST'])
     @must_be_user
+    @ddos_checker
     def upload_video():
         if request.method == 'POST':
             user_id = request.user._id
@@ -94,6 +101,7 @@ def add_routes(app: Flask):
 
     @app.route('/videos/s/<video_id>', methods=['GET'])
     @authenticate_if_token_exists
+    @ddos_checker
     def get_stream_of_user(video_id):
         video = VideoService.get(video_id)
         if video is None:
@@ -105,6 +113,7 @@ def add_routes(app: Flask):
 
     @app.route('/tickets/new')
     @authenticate_if_token_exists
+    @ddos_checker
     def tickets():
         return render_template("new_ticket.html", authenticated=request.authenticated)
 
@@ -118,11 +127,13 @@ def add_routes(app: Flask):
 
     @app.route('/tickets/<ticket_id>', methods=['GET'])
     @authenticate_if_token_exists
+    @ddos_checker
     def show_ticket(ticket_id):
         ticket = TicketService.get_ticket_by_id(ticket_id)
         return render_template('ticket.html', ticket=ticket, user=request.user, authenticated=request.authenticated)
 
     @app.route('/api/tickets/add_message', methods=['POST'])
+    @ddos_checker
     def add_message():
         ticket_id = request.form['ticket_id']
         username = request.form['username']
@@ -131,6 +142,7 @@ def add_routes(app: Flask):
         return json.dumps({'success': True})
 
     @app.route('/api/tickets/change_state', methods=['POST'])
+    @ddos_checker
     def change_state():
         ticket_id = request.form['ticket_id']
         new_state = request.form['new_state']
@@ -139,6 +151,7 @@ def add_routes(app: Flask):
 
     @app.route('/api/comments/new', methods=['POST'])
     @must_be_authenticated
+    @ddos_checker
     def new_comment():
         video_id = request.form['videoId']
         message = request.form['message']
@@ -148,6 +161,7 @@ def add_routes(app: Flask):
 
     @app.route('/api/like', methods=['POST'])
     @must_be_authenticated
+    @ddos_checker
     def like_video():
         video_id = request.form['videoId']
         user_id = str(request.user._id)
@@ -156,6 +170,7 @@ def add_routes(app: Flask):
 
     @app.route('/api/dislike', methods=['POST'])
     @must_be_authenticated
+    @ddos_checker
     def dislike_video():
         video_id = request.form['videoId']
         user_id = str(request.user._id)
@@ -164,18 +179,21 @@ def add_routes(app: Flask):
 
     @app.route('/tickets/my_tickets', methods=['GET'])
     @must_be_authenticated
+    @ddos_checker
     def my_tickets():
         tickets = TicketService.get_user_tickets(request.user._id)
         return render_template('my_tickets.html', assigned_page=False , tickets=tickets, user_id=request.user._id, authenticated=request.authenticated)
 
     @app.route("/tickets/assigned_tickets", methods=['GET'])
     @must_be_supervisor
+    @ddos_checker
     def assigned_tickets():
         tickets = TicketService.get_assigned_tickets(request.user._id)
         return render_template('my_tickets.html', assigned_page=True, tickets=tickets, user_id=request.user._id, authenticated=request.authenticated)
 
     @app.route("/tickets/get_ticket", methods=['GET'])
     @must_be_staff
+    @ddos_checker
     def get_ticket():
         TicketService.assign_ticket(request.user)
         return redirect(url_for("assigned_tickets"))
