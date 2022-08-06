@@ -75,6 +75,12 @@ def must_be_authenticated(f):
 
     return decorated
 
+def must_be_supervisor(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        return AuthService.authenticate(f, ["ADMIN", "STAFF"], *args, **kwargs)
+
+    return decorated
 
 def authenticate_if_token_exists(f):
     @wraps(f)

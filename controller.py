@@ -7,7 +7,7 @@ from pymodm.errors import ValidationError
 from pymongo.errors import DuplicateKeyError
 
 from service.auth import must_be_user, AuthService, must_be_authenticated, must_be_admin, must_be_staff, \
-    authenticate_if_token_exists
+    must_be_supervisor, authenticate_if_token_exists
 from service.user import UserService
 from service.video import VideoService
 from service.ticket import TicketService
@@ -166,4 +166,10 @@ def add_routes(app: Flask):
     @must_be_authenticated
     def my_tickets():
         tickets = TicketService.get_user_tickets(request.user._id)
-        return render_template('my_tickets.html', tickets=tickets, user_id=request.user._id, authenticated=request.authenticated    )
+        return render_template('my_tickets.html', tickets=tickets, user_id=request.user._id, authenticated=request.authenticated)
+
+    @app.route("/tickets/assigned_tickets", methods=['GET'])
+    @must_be_supervisor
+    def assigned_tickets():
+        tickets = TicketService.get_assigned_tickets(request.user._id)
+        return render_template('my_tickets.html', tickets=tickets, user_id=request.user._id, authenticated=request.authenticated)

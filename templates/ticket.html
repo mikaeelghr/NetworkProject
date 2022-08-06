@@ -11,13 +11,12 @@
     <h4>وضعیت: {{ticket.state}}</h4><br>
     {% if ticket.state != "CLOSED" %}
         {% if ticket.assignee_user_id._id == user._id %}
-            <br>
             <select name="select_state" id="select_state">
                 <option value="WAITING">Waiting</option>
                 <option value="CLOSED">Closed</option>
                 <option value="SOLVED">Solved</option>
             </select>
-            <button id="change_state_button" type="button">تغییر</button>
+            <button id="change_state_button" type="button">تغییر</button><br>
             <script>
                 function change_state() {
                     var select = document.getElementById('select_state');
