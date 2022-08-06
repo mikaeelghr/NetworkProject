@@ -9,7 +9,7 @@
             <div style="margin-bottom: 20px"></div>
             <ul>
                 {% for t in tickets %}
-                <a style="padding:10px;font-weight:normal" href="{{user_id}}/tickets/{{t._id}}">
+                <a style="padding:10px;font-weight:normal" href="/tickets/{{t._id}}">
                     {{loop.index+1}}: state: {{t.state}} {{t.messages[0]}}...
                 </a>
                 <br>
