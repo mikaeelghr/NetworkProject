@@ -1,6 +1,7 @@
 from flask import Flask
 
-from config import MONGO_URL, SECRET_KEY, STAFF_IP
+import os
+
 from controller import add_routes
 from flask import request
 from pymodm import connect
@@ -9,11 +10,13 @@ import git
 from service.user import UserService
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = SECRET_KEY
-app.config['STAFF_IP'] = STAFF_IP
+
+config = __import__(os.environ.get('CONFIG_PATH') or 'config')
+app.config['SECRET_KEY'] = config.SECRET_KEY
+app.config['STAFF_IP'] = config.STAFF_IP
 
 if __name__ == "__main__":
-    connect(MONGO_URL)
+    connect(config.MONGO_URL)
     UserService.register_admin()
     add_routes(app)
 
