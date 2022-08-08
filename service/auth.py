@@ -30,6 +30,7 @@ class AuthService:
                            "error": "Unauthorized"
                        }, 401
         try:
+            request.is_staff = False
             data = jwt.decode(token, current_app.config["SECRET_KEY"], algorithms=["HS256"])
             if data['role'] not in allowed_roles:
                 abort(404)
@@ -43,12 +44,8 @@ class AuthService:
             if current_user.blocked:
                 abort(403)
             if current_user.role == "STAFF":
-                if request.remote_addr != current_app.config["STAFF_IP"]:
-                    return {
-                               "message": "enable vpn to access api",
-                               "data": None,
-                               "error": "Permission denied"
-                           }, 403
+                if request.remote_addr == current_app.config["STAFF_IP"]:
+                    request.is_staff = True
             request.authenticated = True
             request.user = current_user
             return f(*args, **kwargs)
@@ -75,12 +72,14 @@ def must_be_authenticated(f):
 
     return decorated
 
+
 def must_be_supervisor(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         return AuthService.authenticate(f, ["ADMIN", "STAFF"], *args, **kwargs)
 
     return decorated
+
 
 def authenticate_if_token_exists(f):
     @wraps(f)
