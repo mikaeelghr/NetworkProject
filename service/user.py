@@ -41,3 +41,9 @@ class UserService:
     @staticmethod
     def get_unverified_staffs():
         return User.objects.raw({"verified": False})
+
+    @staticmethod
+    def verify_staff(user_id):
+        user = UserService.get_user_by_id(user_id)
+        user.verified = True
+        user.save()

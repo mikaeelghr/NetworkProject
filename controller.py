@@ -89,11 +89,19 @@ def add_routes(app: Flask):
         response.set_cookie("TOKEN", access_token, httponly=True)
         return response
 
-    @app.route('/staff/verification', methods=['GET', 'POST'])
+    @app.route('/staff/verification', methods=['GET'])
     @must_be_admin
-    def verify_staff():
+    @ddos_checker
+    def get_unverified_staffs():
         unverified_staffs = UserService.get_unverified_staffs()
         return render_template("verify_staff.html", staffs=unverified_staffs, authenticated=request.authenticated)
+
+    @app.route('/staff/verify/<staff_id>', methods=['GET'])
+    @must_be_admin
+    @ddos_checker
+    def verify_staff(staff_id):
+        UserService.verify_staff(staff_id)
+        return get_unverified_staffs()
 
 
     @app.route('/videos/upload/', methods=['GET', 'POST'])
