@@ -74,8 +74,8 @@ $("#new_ticket_button").on("click", function(){
     });
 });
 
-$("#cancel_button").on("click", function(){
-//    window.location.href = prev_url;
+$("#cancel_new_ticket_button").on("click", function(){
+    window.location.href = "/tickets/my_tickets";
 });
 
 $("#new_comment_button").on("click", function(){

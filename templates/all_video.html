@@ -4,8 +4,13 @@
 <link href="{{ url_for('static', filename='css/profile.css') }}" rel="stylesheet">
 
 <div class="box">
+    {% if show_upload_btn %}
+    <a href="/videos/upload" class="btn btn-lg btn-block" style="margin-bottom:20px">آپلود ویدیو جدید</a>
+    {% else %}
+    <a href="/login" class="btn btn-lg btn-block" style="margin-bottom:20px">به عنوان کاربر وارد شوید تا بتوانید ویدیو آپلود کنید</a>
+    {% endif %}
     <ul class="directory-list">
-        <li class="folder">همه فیلم ها
+        <li class="folder"> همه فیلم ها
             <div style="margin-bottom: 20px"></div>
             <ul>
                 {% for c in videos %}
@@ -14,7 +19,7 @@
                          width="200" height="200"></img>
                     {{c.title}}
                 </a>
-                <br></br>
+                <br>
                 {% endfor %}
             </ul>
         </li>

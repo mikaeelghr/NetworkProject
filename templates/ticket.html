@@ -1,36 +1,40 @@
 {% extends 'base.html' %}
 
 {% block body %}
+<link href="{{ url_for('static', filename='css/profile.css') }}" rel="stylesheet">
+<div class="box">
+<div style="margin-bottom: 20px"></div>
 <form>
-    <h2>State: {{ticket.state}}</h2><br>
     {% for message in ticket.messages %}
-    <h1>{{message}}</h1><br>
+    <h4>{{message}}</h4><br>
     {% endfor %}
+    <h4>وضعیت: {{ticket.state}}</h4><br>
     {% if ticket.state != "CLOSED" %}
-        <input id="ticket_id" type="hidden" value="{{ticket._id}}">
-        <input id="username" type="hidden" value="{{user.username}}">
-        <textarea id="new_ticket_message" placeholder="input your message here" rows="4" cols="50"></textarea>
-        <br>
-        <button id="add_message_button" type="button">send</button>
         {% if ticket.assignee_user_id._id == user._id %}
-            <br>
             <select name="select_state" id="select_state">
                 <option value="WAITING">Waiting</option>
                 <option value="CLOSED">Closed</option>
                 <option value="SOLVED">Solved</option>
             </select>
-            <button id="change_state_button" type="button">change</button>
+            <button id="change_state_button" type="button">تغییر</button><br>
             <script>
-                        function change_state() {
-                            var select = document.getElementById('select_state');
-                            var value = select.options[select.selectedIndex].value;
-                            $.post("/api/tickets/change_state", {ticket_id: {{ticket._id}}, new_state:value}, function (response) { handleResponse("/videos/list", response, function (r) {}, 'مشکلی در تغییر وضعیت به وجود آمد.')});
-                        }
+                function change_state() {
+                    var select = document.getElementById('select_state');
+                    var value = select.options[select.selectedIndex].value;
+                    $.post("/api/tickets/change_state", {ticket_id: {{ticket._id}}, new_state:value}, function (response) { handleResponse("/videos/list", response, function (r) {}, 'مشکلی در تغییر وضعیت به وجود آمد.')});
+                }
 
             </script>
         {% endif %}
+        <input id="ticket_id" type="hidden" value="{{ticket._id}}">
+        <input id="username" type="hidden" value="{{user.username}}">
+        <textarea id="new_ticket_message" placeholder="پیام خود را اینجا وارد کنید" rows="4" cols="50"></textarea>
+        <br>
+        <button id="add_message_button" type="button">ارسال</button>
+
     {% endif %}
 
 
 </form>
+</div>
 {% endblock %}

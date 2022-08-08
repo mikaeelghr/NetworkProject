@@ -31,10 +31,24 @@ class TicketService:
         ticket.save()
 
     @staticmethod
-    def get_user_tickets(username):
-        return list(Ticket.objects.raw({'username': username}))
+    def get_user_tickets(user_id):
+        return list(Ticket.objects.raw({'user': ObjectId(user_id)}))
 
     @staticmethod
     def get_ticket_by_id(ticket_id):
         ticket = Ticket.objects.get({"_id": ObjectId(ticket_id)})
         return ticket
+
+    @staticmethod
+    def get_assigned_tickets(user_id):
+        return list(Ticket.objects.raw({'assignee_user_id': ObjectId(user_id)}))
+
+    @staticmethod
+    def assign_ticket(user):
+        try:
+            ticket = Ticket.objects.get({'state':'NEW'})
+            ticket.assignee_user_id=user
+            ticket.state = "WAITING"
+            ticket.save()
+        except:
+            pass
