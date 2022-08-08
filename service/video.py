@@ -63,6 +63,10 @@ class VideoService:
     @staticmethod
     def delete(_id):
         video = Videos.objects.get({"_id": ObjectId(_id)})
+        video: Videos
+        user = video.owner
+        user.deleted_videos += 1
+        user.save()
         video.deleted = True
         video.save()
 

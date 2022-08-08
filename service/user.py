@@ -9,8 +9,8 @@ class UserService:
     @staticmethod
     def login(username, password):
         try:
-            user =  User.objects.get({'username': username, 'password': password})
-            if not user.verified :
+            user = User.objects.get({'username': username, 'password': password})
+            if not user.verified:
                 return None
             return user
         except DoesNotExist:
@@ -46,4 +46,15 @@ class UserService:
     def verify_staff(user_id):
         user = UserService.get_user_by_id(user_id)
         user.verified = True
+        user.save()
+
+    @staticmethod
+    def get_all_users():
+        return User.objects.raw({"role": "USER"})
+
+    @staticmethod
+    def unblock_user(user_id):
+        user = UserService.get_user_by_id(user_id)
+        user.unblock()
+        print(user.deleted_videos)
         user.save()

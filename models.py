@@ -8,8 +8,14 @@ class User(MongoModel):
     firstname = fields.CharField(max_length=30)
     lastname = fields.CharField(max_length=30)
     verified = fields.BooleanField(default=True)
-    blocked = fields.BooleanField(default=False)
+    deleted_videos = fields.IntegerField(default=0)
     password = fields.CharField()
+
+    def is_blocked(self):
+        return (self.deleted_videos >= 2)
+
+    def unblock(self):
+        self.deleted_videos = 0
 
     class Meta:
         indexes = [pymongo.IndexModel([('username', pymongo.ASCENDING)], unique=True)]

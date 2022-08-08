@@ -250,3 +250,19 @@ def add_routes(app: Flask):
     def get_ticket():
         TicketService.assign_ticket(request.user)
         return redirect(url_for("assigned_tickets"))
+
+
+    @app.route('/staff/actions', methods=['GET'])
+    @must_be_staff
+    @ddos_checker
+    def get_all_users_videos():
+        all_users = UserService.get_all_users()
+        return render_template("staff_actions.html", users=all_users, request=request)
+
+    @app.route('/staff/unblock/<user_id>', methods=['GET'])
+    @must_be_staff
+    @ddos_checker
+    def unblock_user(user_id):
+        print('salam miam in ja man')
+        UserService.unblock_user(user_id)
+        return get_all_users_videos()
