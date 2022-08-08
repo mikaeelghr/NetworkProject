@@ -7,6 +7,7 @@ class User(MongoModel):
     role = fields.CharField(choices=('USER', 'STAFF', "ADMIN"))
     firstname = fields.CharField(max_length=30)
     lastname = fields.CharField(max_length=30)
+    verified = fields.BooleanField(default=True)
     blocked = fields.BooleanField(default=False)
     password = fields.CharField()
 
@@ -38,3 +39,7 @@ class Ticket(MongoModel):
     messages = fields.ListField()
     state = fields.CharField(choices=('NEW', 'WAITING', 'SOLVED', 'CLOSED'))
     assignee_user_id = fields.ReferenceField(User, on_delete=ReferenceField.CASCADE)
+
+class Req(MongoModel):
+    src = fields.CharField()
+    req_time = fields.DateTimeField()
