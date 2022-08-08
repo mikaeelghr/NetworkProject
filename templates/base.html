@@ -33,7 +33,7 @@
     <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                {% if authenticated %}
+                {% if request.authenticated %}
                 <a class="nav-link active" href="/logout">
                     خروج
                 </a>
@@ -43,20 +43,27 @@
                 </a>
                 {% endif %}
             </li>
-        </ul>
-
-
-        <ul class="navbar-nav ml-auto">
             <li class="nav-item">
                 <a class="nav-link active" href="/videos/list">
                     ویدیو ها
                 </a>
             </li>
+            {% if request.authenticated %}
+            {% if request.user.role!='ADMIN' %}
             <li class="nav-item">
                 <a class="nav-link active" href="/tickets/my_tickets">
                     تیکت ها
                 </a>
             </li>
+            {% endif %}
+            {% if request.is_staff %}
+            <li class="nav-item">
+                <a class="nav-link active" href="/tickets/assigned_tickets">
+                    تیکت کاربران
+                </a>
+            </li>
+            {% endif %}
+            {% if request.user.role=='ADMIN' %}
             <li class="nav-item">
                 <a class="nav-link active" href="/tickets/assigned_tickets">
                     تیکت کاربران
@@ -67,15 +74,15 @@
                     مدیریت پشتیبانان
                 </a>
             </li>
-        </ul>
-        <ul class="navbar-nav mr-auto">
+            {% endif %}
+            {% endif %}
+            {% if request.authenticated %}
             <li class="nav-item">
-                {% if user %}
                 <a class="nav-link active" href="/videos/list">
-                    {{ user.first_name }} {{ user.last_name }}
+                    {{ request.user.first_name }} {{ request.user.last_name }}
                 </a>
-                {% endif %}
             </li>
+            {% endif %}
         </ul>
     </div>
 </nav>

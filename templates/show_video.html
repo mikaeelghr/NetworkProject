@@ -7,7 +7,7 @@
        src="{{ url_for('static', filename='uploaded_videos') }}/{{video.owner._id}}/{{ video.filename }}">
 </video>
 
-{% if authenticated %}
+{% if request.authenticated %}
 {% if user_id in video.likes %}
 <img width="40" height="40" id="like_video" src="{{ url_for('static', filename='images/like.png') }}">
 {{ (video.likes |count) - (video.dislikes |count) }}

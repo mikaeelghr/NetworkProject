@@ -19,13 +19,13 @@ def add_routes(app: Flask):
     @authenticate_if_token_exists
     @ddos_checker
     def login_page():
-        return render_template("login.html", authenticated=request.authenticated)
+        return render_template("login.html", request=request)
 
     @app.route('/register')
     @authenticate_if_token_exists
     @ddos_checker
     def register_page():
-        return render_template("register.html", authenticated=request.authenticated)
+        return render_template("register.html", request=request)
 
     @app.route('/videos/list')
     @authenticate_if_token_exists
@@ -35,7 +35,7 @@ def add_routes(app: Flask):
         if request.authenticated:
             show_upload_btn = request.user.role == "USER"
         return render_template("all_video.html", videos=VideoService.get_list(), show_upload_btn=show_upload_btn,
-                               authenticated=request.authenticated)
+                               request=request)
 
     @app.route('/api/user/login', methods=['POST'])
     @ddos_checker
@@ -94,7 +94,7 @@ def add_routes(app: Flask):
     @ddos_checker
     def get_unverified_staffs():
         unverified_staffs = UserService.get_unverified_staffs()
-        return render_template("verify_staff.html", staffs=unverified_staffs, authenticated=request.authenticated)
+        return render_template("verify_staff.html", staffs=unverified_staffs, request=request)
 
     @app.route('/staff/verify/<staff_id>', methods=['GET'])
     @must_be_admin
@@ -102,7 +102,6 @@ def add_routes(app: Flask):
     def verify_staff(staff_id):
         UserService.verify_staff(staff_id)
         return get_unverified_staffs()
-
 
     @app.route('/videos/upload/', methods=['GET', 'POST'])
     @must_be_user
@@ -120,10 +119,10 @@ def add_routes(app: Flask):
             except Exception:
                 return json.dumps({"success": False, "error": "invalid file type"})
             return render_template("add_video.html", form_all_tags=['سرگرمی', 'آموزشی'], success=True,
-                                   success_desc="ویدیو با موفیت آپلود شد", authenticated=request.authenticated)
+                                   success_desc="ویدیو با موفیت آپلود شد", request=request)
         else:
             return render_template("add_video.html", form_all_tags=['سرگرمی', 'آموزشی'],
-                                   authenticated=request.authenticated)
+                                   request=request)
 
     @app.route('/videos/s/<video_id>', methods=['GET'])
     @authenticate_if_token_exists
@@ -135,13 +134,13 @@ def add_routes(app: Flask):
         user_id = None
         if request.authenticated:
             user_id = str(request.user._id)
-        return render_template("show_video.html", video=video, user_id=user_id, authenticated=request.authenticated)
+        return render_template("show_video.html", video=video, user_id=user_id, request=request)
 
     @app.route('/tickets/new')
     @authenticate_if_token_exists
     @ddos_checker
     def tickets():
-        return render_template("new_ticket.html", authenticated=request.authenticated)
+        return render_template("new_ticket.html", request=request)
 
     @app.route('/api/tickets/new', methods=['POST'])
     @must_be_authenticated
@@ -156,7 +155,7 @@ def add_routes(app: Flask):
     @ddos_checker
     def show_ticket(ticket_id):
         ticket = TicketService.get_ticket_by_id(ticket_id)
-        return render_template('ticket.html', ticket=ticket, user=request.user, authenticated=request.authenticated)
+        return render_template('ticket.html', ticket=ticket, user=request.user, request=request)
 
     @app.route('/api/tickets/add_message', methods=['POST'])
     @ddos_checker
@@ -208,14 +207,16 @@ def add_routes(app: Flask):
     @ddos_checker
     def my_tickets():
         tickets = TicketService.get_user_tickets(request.user._id)
-        return render_template('my_tickets.html', assigned_page=False , tickets=tickets, user_id=request.user._id, authenticated=request.authenticated)
+        return render_template('my_tickets.html', assigned_page=False, tickets=tickets, user_id=request.user._id,
+                               request=request)
 
     @app.route("/tickets/assigned_tickets", methods=['GET'])
     @must_be_supervisor
     @ddos_checker
     def assigned_tickets():
         tickets = TicketService.get_assigned_tickets(request.user._id)
-        return render_template('my_tickets.html', assigned_page=True, tickets=tickets, user_id=request.user._id, authenticated=request.authenticated)
+        return render_template('my_tickets.html', assigned_page=True, tickets=tickets, user_id=request.user._id,
+                               request=request)
 
     @app.route("/tickets/get_ticket", methods=['GET'])
     @must_be_staff

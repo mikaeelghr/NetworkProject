@@ -85,7 +85,7 @@ def must_be_supervisor(f):
 def authenticate_if_token_exists(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        return AuthService.authenticate(f, ["USER", "STAFF", "NONE"], *args, **kwargs)
+        return AuthService.authenticate(f, ["USER", "STAFF", "ADMIN", "NONE"], *args, **kwargs)
 
     return decorated
 
