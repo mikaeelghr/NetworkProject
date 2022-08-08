@@ -32,6 +32,8 @@ class Videos(MongoModel):
     comments = fields.EmbeddedDocumentListField(Comment)
     likes = fields.ListField(blank=True)
     dislikes = fields.ListField(blank=True)
+    deleted = fields.BooleanField(blank=True)
+    tags = fields.ListField(blank=True)
 
 
 class Ticket(MongoModel):

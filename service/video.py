@@ -33,7 +33,7 @@ class VideoService:
 
     @staticmethod
     def get_list():
-        return Videos.objects.all()
+        return Videos.objects.raw({"deleted": {"$ne": True}})
 
     @staticmethod
     def get(_id):
@@ -58,6 +58,19 @@ class VideoService:
             video.likes.append(user_id)
         else:
             video.likes.remove(user_id)
+        video.save()
+
+    @staticmethod
+    def delete(_id):
+        video = Videos.objects.get({"_id": ObjectId(_id)})
+        video.deleted = True
+        video.save()
+
+    @staticmethod
+    def add_tag(_id, tag):
+        video = Videos.objects.get({"_id": ObjectId(_id)})
+        if tag not in video.tags:
+            video.likes.append(tag)
         video.save()
 
     @staticmethod

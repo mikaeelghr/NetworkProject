@@ -100,6 +100,27 @@ $("#dislike_video").on("click", function(){
     });
 });
 
+$("#delete_video").on("click", function(){
+    var video_id = $("#video_id_input").val();
+    $.post("/api/video/s/"+video_id+"/delete", {}, function (response) {
+        handleResponse("/videos/list", response, function (r) {}, 'مشکلی پیش آمد.')
+    });
+});
+
+$("#sensitive_video").on("click", function(){
+    var video_id = $("#video_id_input").val();
+    $.post("/api/video/s/"+video_id+"/sensitive", {}, function (response) {
+        handleResponse(window.location.href, response, function (r) {}, 'مشکلی پیش آمد.')
+    });
+});
+
+$("#dislike_video").on("click", function(){
+    var video_id = $("#video_id_input").val();
+    $.post("/api/dislike", {videoId: video_id}, function (response) {
+        handleResponse(window.location.href, response, function (r) {}, 'مشکلی پیش آمد.')
+    });
+});
+
 $("#add_message_button").on("click", function(){
     var message = $("#new_ticket_message").val();
     var ticket_id = $("#ticket_id").val();

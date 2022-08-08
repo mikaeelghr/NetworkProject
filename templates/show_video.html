@@ -7,6 +7,7 @@
        src="{{ url_for('static', filename='uploaded_videos') }}/{{video.owner._id}}/{{ video.filename }}">
 </video>
 
+<br>
 {% if request.authenticated %}
 {% if user_id in video.likes %}
 <img width="40" height="40" id="like_video" src="{{ url_for('static', filename='images/like.png') }}">
@@ -22,6 +23,14 @@
 <img width="40" height="40" id="dislike_video" src="{{ url_for('static', filename='images/dislike_out.png') }}">
 {% endif %}
 
+
+{% if request.is_staff %}
+<br>
+<button class="btn btn-sm" id="delete_video" type="button">حذف ویدیو</button>
+<button class="btn btn-sm" id="sensitive_video" type="button">برچسب به عنوان خطرناک</button>
+{% endif %}
+
+<br>
 <input id="video_id_input" type="hidden" value="{{video._id}}">
 <div class="input-group">
     <textarea id="comment_message" placeholder="نظر بدهید" class="form-control" rows="1" cols="30" required></textarea>
