@@ -102,14 +102,14 @@ $("#dislike_video").on("click", function(){
 
 $("#delete_video").on("click", function(){
     var video_id = $("#video_id_input").val();
-    $.post("/api/video/s/"+video_id+"/delete", {}, function (response) {
+    $.post("/videos/s/"+video_id+"/delete", {}, function (response) {
         handleResponse("/videos/list", response, function (r) {}, 'مشکلی پیش آمد.')
     });
 });
 
 $("#sensitive_video").on("click", function(){
     var video_id = $("#video_id_input").val();
-    $.post("/api/video/s/"+video_id+"/sensitive", {}, function (response) {
+    $.post("/videos/s/"+video_id+"/sensitive", {}, function (response) {
         handleResponse(window.location.href, response, function (r) {}, 'مشکلی پیش آمد.')
     });
 });

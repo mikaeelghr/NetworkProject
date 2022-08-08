@@ -70,7 +70,7 @@ class VideoService:
     def add_tag(_id, tag):
         video = Videos.objects.get({"_id": ObjectId(_id)})
         if tag not in video.tags:
-            video.likes.append(tag)
+            video.tags.append(tag)
         video.save()
 
     @staticmethod
