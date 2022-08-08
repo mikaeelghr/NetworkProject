@@ -110,6 +110,9 @@ def ddos_checker(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         thr = 1000
+        host_addr = "127.0.0.1"
+        if request.remote_addr == host_addr:
+            return f(*args, **kwargs)
         ReqService.create_req(request.remote_addr)
         if ReqService.get_user_recent_reqs(request.remote_addr) > thr:
             return {"message": "too many requests",
