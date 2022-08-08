@@ -37,3 +37,7 @@ class UserService:
     @staticmethod
     def get_admin_id():
         return User.objects.get({"username": "manager"})._id
+
+    @staticmethod
+    def get_unverified_staffs():
+        return User.objects.raw({"verified": False})

@@ -26,8 +26,9 @@ $("#registerbtn").on("click", function(){
     var password = $("#password").val();
     var firstname = $("#firstname").val();
     var lastname = $("#lastname").val();
+    var role = $("#role").val();
 
-    $.post("/api/user/register", {username: user, password: password, firstname, lastname}, function (response) {
+    $.post("/api/user/register", {role:role, username: user, password: password, firstname, lastname}, function (response) {
         handleResponse("/videos/list", response, function ({token}) { window.localStorage.setItem('ACCESS_TOKEN', token) });
     });
 });
