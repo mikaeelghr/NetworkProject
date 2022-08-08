@@ -12,7 +12,7 @@ class User(MongoModel):
     password = fields.CharField()
 
     def is_blocked(self):
-        return (self.deleted_videos >= 2)
+        return self.deleted_videos >= 2
 
     def unblock(self):
         self.deleted_videos = 0
@@ -20,8 +20,6 @@ class User(MongoModel):
     class Meta:
         indexes = [pymongo.IndexModel([('username', pymongo.ASCENDING)], unique=True)]
 
-
-# feel free to change these models
 
 class Comment(EmbeddedMongoModel):
     author = fields.ReferenceField(User, on_delete=ReferenceField.CASCADE)
@@ -47,6 +45,7 @@ class Ticket(MongoModel):
     messages = fields.ListField()
     state = fields.CharField(choices=('NEW', 'WAITING', 'SOLVED', 'CLOSED'))
     assignee_user_id = fields.ReferenceField(User, on_delete=ReferenceField.CASCADE)
+
 
 class Req(MongoModel):
     src = fields.CharField()
