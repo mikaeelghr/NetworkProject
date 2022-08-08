@@ -10,5 +10,5 @@ docker-compose up mongo
 </code>
 <br>
 <code>
-python3 main.py
+uwsgi --wsgi-file main.py --callable app --http 127.0.0.1:5000
 </code>
