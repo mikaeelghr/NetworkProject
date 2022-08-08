@@ -47,6 +47,12 @@ class AuthService:
             if current_user.role == "STAFF":
                 if request.remote_addr == current_app.config["STAFF_IP"]:
                     request.is_staff = True
+                elif len(allowed_roles) == 1:
+                    return {
+                               "message": "enable vpn to access this api",
+                               "data": None,
+                               "error": "Permission Denied"
+                           }, 403
             request.authenticated = True
             request.user = current_user
             return f(*args, **kwargs)
@@ -105,6 +111,7 @@ def must_be_admin(f):
 
     return decorated
 
+
 def ddos_checker(f):
     @wraps(f)
     def decorated(*args, **kwargs):
@@ -115,7 +122,8 @@ def ddos_checker(f):
         ReqService.create_req(request.remote_addr)
         if ReqService.get_user_recent_reqs(request.remote_addr) > thr:
             return {"message": "too many requests",
-                               "data": None,
-                               "error": "DDoS"}, 403
+                    "data": None,
+                    "error": "DDoS"}, 403
         return f(*args, **kwargs)
+
     return decorated

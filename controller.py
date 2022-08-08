@@ -136,20 +136,20 @@ def add_routes(app: Flask):
             user_id = str(request.user._id)
         return render_template("show_video.html", video=video, user_id=user_id, request=request)
 
-    @app.route('/videos/s/<video_id>/delete', methods=['GET'])
+    @app.route('/videos/s/<video_id>/delete', methods=['POST'])
     @must_be_staff
     @ddos_checker
-    def get_stream_of_user(video_id):
+    def delete_video(video_id):
         video = VideoService.get(video_id)
         if video is None:
             return json.dumps({"error": "file not found"})
         VideoService.delete(video_id)
         return json.dumps({'success': True})
 
-    @app.route('/videos/s/<video_id>/sensitive', methods=['GET'])
+    @app.route('/videos/s/<video_id>/sensitive', methods=['POST'])
     @must_be_staff
     @ddos_checker
-    def get_stream_of_user(video_id):
+    def sensitive_video(video_id):
         video = VideoService.get(video_id)
         if video is None:
             return json.dumps({"error": "file not found"})
