@@ -5,30 +5,33 @@
     <ul class="directory-list">
         <li class="folder">
             <ul>
-            <table class="table">
-              <thead class="thead-dark">
-                <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">نام کاربری</th>
-                  <th scope="col">نام</th>
-                  <th scope="col">نام خانوادگی</th>
-                  <th scope="col">تایید شده</th>
-                  <th scope="col">عملیات</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for c in staffs %}
-                <tr>
-                  <th scope="row">{{loop.index}}</th>
-                  <td>{{c.username}}</td>
-                  <td>{{c.firstname}}</td>
-                  <td>{{c.lastname}}</td>
-                  <td>{{c.verified}}</td>
-                  <td><a href="/staff/verify/{{c._id}}">تایید اکانت</a></td>
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
+                کاربران سیستم
+                <table class="table">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">نام کاربری</th>
+                        <th scope="col">نام</th>
+                        <th scope="col">نام خانوادگی</th>
+                        <th scope="col">مصدود شده</th>
+                        <th scope="col">عملیات</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for c in users %}
+                    <tr>
+                        <th scope="row">{{loop.index}}</th>
+                        <td>{{c.username}}</td>
+                        <td>{{c.firstname}}</td>
+                        <td>{{c.lastname}}</td>
+                        <td>{{c.is_blocked()}}</td>
+                        {% if c.is_blocked() %}
+                        <td><a href="/staff/unblock/{{c._id}}">رفع مصدودیت</a></td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
             </ul>
         </li>
     </ul>

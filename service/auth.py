@@ -42,7 +42,7 @@ class AuthService:
                            "data": None,
                            "error": "Unauthorized"
                        }, 401
-            if current_user.blocked:
+            if current_user.is_blocked():
                 abort(403)
             if current_user.role == "STAFF":
                 if request.remote_addr == current_app.config["STAFF_IP"]:
