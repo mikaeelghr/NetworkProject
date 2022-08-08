@@ -9,4 +9,4 @@ class ReqService:
     @staticmethod
     def get_user_recent_reqs(src):
         last_time = datetime.datetime.now() - datetime.timedelta(days=1)
-        return len(list(Req.objects.raw({'req_time': {'$gte':last_time}})))
+        return len(list(Req.objects.raw({'src':src, 'req_time': {'$gte':last_time}})))

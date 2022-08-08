@@ -1,4 +1,4 @@
 for i in $(seq 100)
 do
-  ping 185.18.214.189 &
+  ping 127.0.0.1 &
 done
