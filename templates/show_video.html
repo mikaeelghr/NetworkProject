@@ -1,11 +1,20 @@
 {% extends 'base.html' %}
 
 {% block body %}
+
 <h1>{{ video.title }}</h1>
+{% for tag in video.tags %}
+<div style="padding:10px;background-color:#f66;border-radius:30px;font-size:13px;position:fixed">
+{{tag}}
+</div>
+<br>
+{% endfor %}
 <video id="player" playsinline controls width="800" height="500"
        data-poster="{{ url_for('static', filename='uploaded_videos') }}/{{video.owner._id}}/{{ video.thumbnail_name }}"
        src="{{ url_for('static', filename='uploaded_videos') }}/{{video.owner._id}}/{{ video.filename }}">
 </video>
+
+<br>
 
 <br>
 {% if request.authenticated %}
