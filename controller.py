@@ -5,7 +5,7 @@ import json
 
 from pymodm.errors import ValidationError
 from pymongo.errors import DuplicateKeyError
-from werkzeug.exceptions import RequestEntityTooLarge
+from werkzeug.exceptions import RequestEntityTooLarge, abort
 
 from service.auth import must_be_user, AuthService, must_be_authenticated, must_be_admin, must_be_staff, \
     must_be_supervisor, ddos_checker, authenticate_if_token_exists
@@ -113,6 +113,8 @@ def add_routes(app: Flask):
     @must_be_user
     @ddos_checker
     def upload_video():
+        if request.user.is_blocked():
+            abort(403)
         if request.method == 'POST':
             user_id = request.user._id
             if 'file' not in request.files or request.files['file'] == '':
