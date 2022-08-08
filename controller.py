@@ -5,6 +5,7 @@ import json
 
 from pymodm.errors import ValidationError
 from pymongo.errors import DuplicateKeyError
+from werkzeug.exceptions import RequestEntityTooLarge
 
 from service.auth import must_be_user, AuthService, must_be_authenticated, must_be_admin, must_be_staff, \
     must_be_supervisor, ddos_checker, authenticate_if_token_exists
@@ -26,6 +27,11 @@ def add_routes(app: Flask):
     @ddos_checker
     def register_page():
         return render_template("register.html", request=request)
+
+    @app.errorhandler(413)
+    @app.errorhandler(RequestEntityTooLarge)
+    def request_entity_too_large(error):
+        return 'File Too Large', 413
 
     @app.route('/videos/list')
     @authenticate_if_token_exists

@@ -14,6 +14,7 @@ app = Flask(__name__)
 config = __import__(os.environ.get('CONFIG_PATH') or 'config')
 app.config['SECRET_KEY'] = config.SECRET_KEY
 app.config['STAFF_IP'] = config.STAFF_IP
+app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024
 
 if __name__ == "__main__":
     connect(config.MONGO_URL)
