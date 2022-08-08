@@ -251,7 +251,6 @@ def add_routes(app: Flask):
         TicketService.assign_ticket(request.user)
         return redirect(url_for("assigned_tickets"))
 
-
     @app.route('/staff/actions', methods=['GET'])
     @must_be_staff
     @ddos_checker
