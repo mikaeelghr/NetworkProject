@@ -7,8 +7,10 @@
 
 {% if assigned_page==False %}
     <a href="/tickets/new">تیکت جدید</a>
-    {% else %}
+{% else %}
+    {% if request.is_staff %}
     <a href="/tickets/get_ticket">دریافت تیکت</a>
+    {% endif %}
     {% endif %}
 <table style="width:100%">
     <tr>
