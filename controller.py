@@ -46,8 +46,11 @@ def add_routes(app: Flask):
         user = UserService.login(username, password)
         if user is None:
             return json.dumps({'success': False})
-        access_token = AuthService.generateToken(user)
+        # ADD THIS FOR STAFF
+        if user.verified == False:
+            return json.dumps({'success': False})
 
+        access_token = AuthService.generateToken(user)
         response = make_response(json.dumps({'success': True, 'token': access_token}))
         response.set_cookie("TOKEN", access_token, httponly=True)
         return response
@@ -66,17 +69,40 @@ def add_routes(app: Flask):
         password = request.form['password']
         firstname = request.form['firstname']
         lastname = request.form['lastname']
+        # ADD THIS FOR STAFF
+        role = request.form['role']
+        verified = True
+        if role == 'STAFF': verified = False
 
         try:
-            user = UserService.register(username, password, firstname, lastname)
+            user = UserService.register(username, password, firstname, lastname, role, verified)
         except DuplicateKeyError:
             return json.dumps({'success': False, "message": "نام کاربری تکراری است"})
         except ValidationError:
             return json.dumps({'success': False, "message": "مقادیر را درست وارد کنید"})
+
+        # ADD THIS FOR STAFF
+        if role == 'STAFF':
+            return json.dumps({'success': False, "message": "اکانت شما باید تایید شود."})
         access_token = AuthService.generateToken(user)
         response = make_response(json.dumps({'success': True, 'token': access_token}))
         response.set_cookie("TOKEN", access_token, httponly=True)
         return response
+
+    @app.route('/staff/verification', methods=['GET'])
+    @must_be_admin
+    @ddos_checker
+    def get_unverified_staffs():
+        unverified_staffs = UserService.get_unverified_staffs()
+        return render_template("verify_staff.html", staffs=unverified_staffs, authenticated=request.authenticated)
+
+    @app.route('/staff/verify/<staff_id>', methods=['GET'])
+    @must_be_admin
+    @ddos_checker
+    def verify_staff(staff_id):
+        UserService.verify_staff(staff_id)
+        return get_unverified_staffs()
+
 
     @app.route('/videos/upload/', methods=['GET', 'POST'])
     @must_be_user

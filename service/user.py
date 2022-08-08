@@ -9,16 +9,19 @@ class UserService:
     @staticmethod
     def login(username, password):
         try:
-            return User.objects.get({'username': username, 'password': password})
+            user =  User.objects.get({'username': username, 'password': password})
+            if not user.verified :
+                return None
+            return user
         except DoesNotExist:
             return None
 
     # TODO: encrypt password
     @staticmethod
-    def register(username, password, firstname, lastname):
+    def register(username, password, firstname, lastname, role='USER', verified=True):
         return User.objects.create(username=username, password=password,
                                    firstname=firstname, lastname=lastname,
-                                   role="USER")
+                                   role=role, verified=verified)
 
     @staticmethod
     def register_admin():
@@ -34,3 +37,13 @@ class UserService:
     @staticmethod
     def get_admin_id():
         return User.objects.get({"username": "manager"})._id
+
+    @staticmethod
+    def get_unverified_staffs():
+        return User.objects.raw({"verified": False})
+
+    @staticmethod
+    def verify_staff(user_id):
+        user = UserService.get_user_by_id(user_id)
+        user.verified = True
+        user.save()
